@@ -469,16 +469,23 @@ class Layer:
             gamma43 = gamma43/(self.mu*self.epsilon[2,2]-zeta**2)
             if np.isnan(gamma43):
                 gamma43 = -self.mu*self.epsilon[2,1]/(self.mu*self.epsilon[2,2]-zeta**2)
-            
-        self.gamma[0,1] = gamma12
-        self.gamma[0,2] = gamma13
-        self.gamma[1,0] = gamma21
-        self.gamma[1,2] = gamma23
-        self.gamma[2,1] = gamma32
-        self.gamma[2,2] = gamma33
-        self.gamma[3,0] = gamma41
-        self.gamma[3,2] = gamma43
-
+        
+        ### gamma field vectors should be normalized to avoid any birefringence problems
+        # use double square bracket notation to ensure correct array shape
+        gamma1 = np.array([[self.gamma[0,0], gamma12, gamma13]],dtype=np.complex128)
+        gamma2 = np.array([[gamma21, self.gamma[1,1], gamma23]],dtype=np.complex128)
+        gamma3 = np.array([[self.gamma[2,0], gamma32, gamma33]],dtype=np.complex128)
+        gamma4 = np.array([[gamma41, self.gamma[3,1], gamma43]],dtype=np.complex128)
+        gamma1 = gamma1/np.sqrt(np.matmul(gamma1,gamma1.T)) # normalize
+        gamma2 = gamma2/np.sqrt(np.matmul(gamma2,gamma2.T)) # normalize
+        gamma3 = gamma3/np.sqrt(np.matmul(gamma3,gamma3.T)) # normalize
+        gamma4 = gamma4/np.sqrt(np.matmul(gamma4,gamma4.T)) # normalize
+        
+        self.gamma[0,:] = gamma1
+        self.gamma[1,:] = gamma2
+        self.gamma[2,:] = gamma3
+        self.gamma[3,:] = gamma4
+        
     def calculate_transfer_matrix(self, f, zeta):
         """
         Compute the transfer matrix of the whole layer T=APA^{-1}
@@ -887,6 +894,39 @@ class System:
             E_out[3:6,ii] = F_tens[12:15,ii]+F_tens[15:18,ii]+F_tens[18:21,ii]+F_tens[21:,ii]
             
         return z, E_out, zn[:-1] #last interface is useless, substrate=infinite
+    
+    def get_spatial_permittivity(self, z):
+        laynum = len(self.layers)
+        zn = np.zeros(laynum+2) ## superstrate+layers+substrate
+        zn[-1] = 0.0 ## initially with the substrate
+        if laynum>0:
+            zn[-2] = zn[-1]-self.substrate.thick
+            for kl in range(1,laynum)[::-1]:
+                ### subtract the thickness (building thickness array backwards)    
+                zn[kl] = zn[kl+1]-self.layers[kl].thick
+            zn[0] = zn[1]-self.layers[0].thick
+        else:
+            zn[0] = -self.substrate.thick
+        zn = zn-zn[0]
+        ## starting from the superstrate:
+        current_layer = 0
+        L = self.superstrate
+        eps = np.ones((3,3,len(z)), dtype=np.complex128)
+        for ii, zc in enumerate(z): ## enumerates returns a tuple (index, value)
+            
+            if zc>zn[current_layer]:
+                # change the layer
+                # important to count here until laynum+1 to get the correct zn
+                # in the substrate for dKiz
+                
+                current_layer += 1
+                
+                if current_layer == laynum+1: ## reached substrate
+                    L = self.substrate
+                else:
+                    L = self.layers[current_layer-1]
+            eps[:,:,ii] = L.epsilon
+        return eps
     
     def calculate_matelem(self, zeta0, f):
         """
