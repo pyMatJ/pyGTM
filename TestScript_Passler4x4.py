@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
+@author: Mathieu Jeannin
+
 Example file for the GTM package.
 
 It reproduces two specific configurations from the original paper of Passler and Paarmann
@@ -11,11 +13,11 @@ Fig. 3(a,b) with a 3.5um air gap
 
 import numpy as np
 import matplotlib.pyplot as plt
-import GTM.TransferMatrix_PasslerAlgo as GTM
+import GTM.GTMcore as GTM
 import GTM.Permittivities as mat
 
 #%%
-c_const = 299792458 # m/s
+c_const = 299792458.0 # m/s
 
 ## create a void system: substrate=superstrate=vac
 S = GTM.System()
@@ -31,9 +33,9 @@ S.set_substrate(SiC6H)
 S.add_layer(AirGap)
 
 # angle of incidence
-thetain = np.deg2rad(30)
+thetain = np.deg2rad(30.0)
 
-wnplot = np.arange(750, 1050, dtype=np.float) # wavenumber range of the plot in cm-1
+wnplot = np.arange(750.0, 1050.0, dtype=np.float) # wavenumber range of the plot in cm-1
 fplot = wnplot*c_const*1e2 # corresponding frequency
 dz = 100e-9 # spatial resolution
 
@@ -46,8 +48,8 @@ for ii, fi in enumerate(fplot):
     S.initialize_sys(fi)
     zeta_sys = np.sin(thetain)*np.sqrt(S.superstrate.epsilon[0,0])
     Sys_Gamma = S.calculate_GammaStar(fi, zeta_sys)
-    r, R, tfield, t, T = S.calculate_r_t()
-    zplot, E_out, zn_plot = S.calculate_Efield(fi, zeta_sys, dz)
+    r, R, t, T = S.calculate_r_t(zeta_sys)
+    zplot, E_out, zn_plot = S.calculate_Efield(fi, zeta_sys, dz=dz)
     Rplot[ii] = R[0]
     Ex.append(E_out[0,:])
 
@@ -91,7 +93,7 @@ S2.set_substrate(SiC6H)
 S2.add_layer(AirGap2)
 S2.add_layer(GaN)
 
-wnplot2 = np.arange(550, 1050) # wavenumber range of the plot in cm-1
+wnplot2 = np.arange(550, 1050, dtype=np.float) # wavenumber range of the plot in cm-1
 fplot2 = wnplot2*c_const*1e2 # corresponding frequency
 
 Rplot2 = np.zeros(len(wnplot2))
@@ -100,8 +102,8 @@ for ii, fi in enumerate(fplot2):
     S2.initialize_sys(fi)
     zeta_sys = np.sin(thetain)*np.sqrt(S.superstrate.epsilon[0,0])
     Sys_Gamma = S2.calculate_GammaStar(fi, zeta_sys)
-    r, R, tfield, t, T = S2.calculate_r_t()
-    zplot2, E_out, zn_plot2 = S2.calculate_Efield(fi, zeta_sys, dz)
+    r, R, t, T = S2.calculate_r_t(zeta_sys)
+    zplot2, E_out, zn_plot2 = S2.calculate_Efield(fi, zeta_sys, dz=dz)
     Rplot2[ii] = R[0]
     Ex2.append(E_out[0,:])
     

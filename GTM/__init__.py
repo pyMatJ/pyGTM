@@ -1,16 +1,20 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-This program implements the generalized 4x4 transfer matrix (GTM) method poposed in 
-Passler, N. C. and Paarmann, A., JOSA B 34, 2128 (2017) doi.org/10.1364/JOSAB.34.002128
-and corrected in <DOI to be inserted>, with inputs from D. Dietze's FSRStools code
+This program implements the generalized 4x4 transfer matrix (GTM) method 
+poposed in Passler, N. C. and Paarmann, A., JOSA B 34, 2128 (2017) 
+doi.org/10.1364/JOSAB.34.002128
+and corrected in doi.org/10.1364/JOSAB.36.003246, 
+and the layer-resolved absorption proposed in 
+https://arxiv.org/abs/2002.03832. 
+
+This code uses inputs from D. Dietze's FSRStools library
 https://github.com/ddietze/FSRStools
 
-Please cite the associated publications if you use this code. 
+Please cite the relevant associated publications if you use this code. 
 
 author: Mathieu Jeannin <math.jeannin@free.fr> (permanent)
-affiliation: Laboratoire de Physique de l'Ecole Normale Superieure (2019)
-
+affiliations: Laboratoire de Physique de l'Ecole Normale Superieure (2019)
+              Centre de Nanosciences et de Nanotechnologies (2020)
 ..
 This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,6 +29,6 @@ This program is free software: you can redistribute it and/or modify
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-    Copyright (C) Mathieu Jeannin 2019 <math.jeannin@free.fr>.
+    Copyright (C) Mathieu Jeannin 2019, 2020 <math.jeannin@free.fr>.
     
 """

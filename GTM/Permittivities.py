@@ -1,15 +1,18 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 Define permittivity functions to be used in the GTM methohd.
 
 Utility functions such as Drude or phonon models are defined at the end of 
-the script. 
+the script. Some materials have different definitions according to the 
+frequency range, you should always carefully check if they match your 
+expectations !
 
 All permittivities are expected to be calculated at frequency f in Hz.
 
 **Change log:**
-
+*19-03-2020*:
+    - Fixed various bugs in the definition of single resonance materials 
+    (GaN, AlN, MoO3, InN, hBN) and added SiC without weak phonon modes
 *20-09-2019*:
     - Fixed database problems for some materials and some mistakes in the 
     permittivity functions. Commented out helper `print` functions. 
@@ -30,7 +33,7 @@ This program is free software: you can redistribute it and/or modify
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-    Copyright (C) Mathieu Jeannin 2019 <math.jeannin@free.fr>.
+    Copyright (C) Mathieu Jeannin 2019 2020 <math.jeannin@free.fr>.
 """
 import numpy as np
 import os
@@ -51,6 +54,18 @@ def eps_KRS5(f):
     eps = np.interp(f,fn_KRS5,n_KRS5**2)
     return eps
 
+def eps_SiCx(f): # SiC, ordinary
+    return eps_SiC6Hx(f) ## same as below
+
+def eps_SiCz(f): ## SiC, extraordinary, without weak phonon modes
+    wtSiCz = 783.67*c_const*1e2
+    wlSiCz = 962.0*c_const*1e2
+    epsinfSiCz = 6.78
+    GtSiCz = 2.535*c_const*1e2*2
+    GlSiCz = 2.535*c_const*1e2*2
+    eps =  eps_1phonon(f,wtSiCz,wlSiCz,GtSiCz,GlSiCz,epsinfSiCz)
+    return eps
+
 def eps_SiC6Hx(f): # 6H-SiC ordinary epsilon
     wtSiC = 794.78*c_const*1e2
     wlSiC = 967.93*c_const*1e2
@@ -59,7 +74,7 @@ def eps_SiC6Hx(f): # 6H-SiC ordinary epsilon
     GlSiC = 2.535*c_const*1e2
     eps =  eps_1phonon(f,wtSiC,wlSiC,GtSiC,GlSiC,epsinfSiC)
     return eps
-def eps_SiC6Hz(f): # 6H-SiC extraordinary epsilon
+def eps_SiC6Hz(f): # 6H-SiC extraordinary epsilon with weak phonon modes
     wtSiCz = 783.67*c_const*1e2
     wlSiCz = 962.0*c_const*1e2
     epsinfSiCz = 6.78
@@ -79,7 +94,7 @@ def eps_GaNx(f): # GaN ordinary epsilon
     GtGaN     = 4.0*c_const*1e2
     GlGaN     = 4.0*c_const*1e2
     epsinfGaN = 5.04
-    eps =  eps_1phonon(f,wtGaN,wlGaN,GtGaN,GlGaN,epsinfGaN);
+    eps =  eps_1phonon(f,wtGaN,wlGaN,GtGaN,GlGaN,epsinfGaN)
     return eps
 def eps_GaNz(f): # GaN extraordinary epsilon
     wlGaNz     = 732.5*c_const*1e2
@@ -87,7 +102,7 @@ def eps_GaNz(f): # GaN extraordinary epsilon
     GtGaNz     = 4.0*c_const*1e2
     GlGaNz     = 4.0*c_const*1e2
     epsinfGaNz = 5.01
-    eps =  eps_1phonon(f,wtGaNz,wlGaNz,GtGaNz,GlGaNz,epsinfGaNz);
+    eps =  eps_1phonon(f,wtGaNz,wlGaNz,GtGaNz,GlGaNz,epsinfGaNz)
     return eps
 
 def eps_AlNx(f):
@@ -95,14 +110,14 @@ def eps_AlNx(f):
     wtAlN     = 667.2*c_const*1e2
     GtAlN     = 2.2*c_const*1e2
     epsinfAlN = 4.160
-    eps = eps_1phonon(f, wtAlN, wlAlN, GtAlN, epsinfAlN)
+    eps = eps_Lorentz(f, wtAlN, wlAlN, GtAlN, epsinfAlN)
     return eps
 def eps_AlNz(f):
     wlAlNz     = 888.9*c_const*1e2
     wtAlNz     = 608.5*c_const*1e2
     GtAlNz     = 2.2*c_const*1e2
     epsinfAlNz = 4.350
-    eps = eps_1phonon(f, wtAlNz, wlAlNz, GtAlNz, epsinfAlNz)
+    eps = eps_Lorentz(f, wtAlNz, wlAlNz, GtAlNz, epsinfAlNz)
     return eps
 
 def eps_hBNx(f):
@@ -110,14 +125,14 @@ def eps_hBNx(f):
     wthBN      = 1360*c_const*1e2
     GthBN      = 7*c_const*1e2
     epsinfhBN  = 4.9
-    eps = eps_1phonon(f, wthBN, wlhBN, GthBN, epsinfhBN)
+    eps = eps_Lorentz(f, wthBN, wlhBN, GthBN, epsinfhBN)
     return eps
 def eps_hBNz(f):
     wlhBNz      = 811**c_const*1e2
     wthBNz      = 760*c_const*1e2
     GthBNz      = 1*c_const*1e2
     epsinfhBNz  = 2.95    
-    eps = eps_1phonon(f, wthBNz, wlhBNz, GthBNz, epsinfhBNz)
+    eps = eps_Lorentz(f, wthBNz, wlhBNz, GthBNz, epsinfhBNz)
     return eps
 
 def eps_InNx(f):
@@ -125,14 +140,14 @@ def eps_InNx(f):
     wtInN       = 476*c_const*1e2
     GtInN       = 4.4*c_const*1e2
     epsinfInN   = 8.45*c_const*1e2
-    eps = eps_1phonon(f, wtInN, wlInN, GtInN, epsinfInN)
+    eps = eps_Lorentz(f, wtInN, wlInN, GtInN, epsinfInN)
     return eps
 def eps_InNz(f):
     wlInNz      = 586*c_const*1e2
     wtInNz      = 447*c_const*1e2
     GtInNz       = 4.4*c_const*1e2
     epsinfInNz  = 8.35*c_const*1e2
-    eps = eps_1phonon(f, wtInNz, wlInNz, GtInNz, epsinfInNz)
+    eps = eps_Lorentz(f, wtInNz, wlInNz, GtInNz, epsinfInNz)
     return eps
 
 def eps_MoO3x(f):
@@ -140,21 +155,21 @@ def eps_MoO3x(f):
     wlMoO3x     = 972*c_const*1e2
     GMoO3x      = 4*c_const*1e2
     epsinfMoO3x = 4.0
-    eps = eps_1phonon(f, wtMoO3x, wlMoO3x, GMoO3x, epsinfMoO3x)
+    eps = eps_Lorentz(f, wtMoO3x, wlMoO3x, GMoO3x, epsinfMoO3x)
     return eps
 def eps_MoO3y(f):
     wtMoO3y     = 545*c_const*1e2
     wlMoO3y     = 851*c_const*1e2
     GMoO3y      = 4*c_const*1e2
     epsinfMoO3y = 5.2
-    eps = eps_1phonon(f, wtMoO3y, wlMoO3y, GMoO3y, epsinfMoO3y)
+    eps = eps_Lorentz(f, wtMoO3y, wlMoO3y, GMoO3y, epsinfMoO3y)
     return eps
 def eps_MoO3z(f):
     wtMoO3z     = 958*c_const*1e2
     wlMoO3z     = 1004*c_const*1e2
     GMoO3z      = 2*c_const*1e2    
     epsinfMoO3z = 2.4
-    eps = eps_1phonon(f, wtMoO3z, wlMoO3z, GMoO3z, epsinfMoO3z)
+    eps = eps_Lorentz(f, wtMoO3z, wlMoO3z, GMoO3z, epsinfMoO3z)
     return eps
 
 def eps_GaAs(f):
@@ -163,7 +178,7 @@ def eps_GaAs(f):
     GtGaAs     = 0.8*c_const*1e2
     GlGaAs     = 0.8*c_const*1e2
     epsinfGaAs = 10.9
-    eps =  eps_1phonon(f,wtGaAs,wlGaAs,GtGaAs,GlGaAs,epsinfGaAs);
+    eps =  eps_1phonon(f,wtGaAs,wlGaAs,GtGaAs,GlGaAs,epsinfGaAs)
     return eps
 
 def eps_GaP(f):
@@ -172,7 +187,7 @@ def eps_GaP(f):
     GtGaP     = 1.1*c_const*1e2
     GlGaP     = 1.1*c_const*1e2
     epsinfGaP = 9.1
-    eps =  eps_1phonon(f,wtGaP,wlGaP,GtGaP,GlGaP,epsinfGaP);
+    eps =  eps_1phonon(f,wtGaP,wlGaP,GtGaP,GlGaP,epsinfGaP)
     return eps
 
 def eps_InAs(f):
@@ -181,7 +196,7 @@ def eps_InAs(f):
     GtInAs     = 2.5*c_const*1e2
     GlInAs     = 2.5*c_const*1e2
     epsinfInAs = 12.9
-    eps =  eps_1phonon(f,wtInAs,wlInAs,GtInAs,GlInAs,epsinfInAs);
+    eps =  eps_1phonon(f,wtInAs,wlInAs,GtInAs,GlInAs,epsinfInAs)
     return eps
 
 def eps_Al2O3o(f):
@@ -367,7 +382,10 @@ def eps_SiO2(f):
                                    skip_header=1, unpack=True)
     lbda = _eps_loaded[epsSiO2file][0,:]*1e-6
     n = _eps_loaded[epsSiO2file][1,:]
-    k = _eps_loaded[epsSiO2file][2,:]
+    if epsSiO2file == epsSiO2file_P:
+        k = _eps_loaded[epsSiO2file][2,:]
+    else:
+        k = np.zeros(len(n))
     eps1 = n**2-k**2
     eps2 = 2*n*k
     floc = c_const/lbda
@@ -390,6 +408,9 @@ def eps_drude(f, fp, gammap, epsinf=1.0):
     eps = epsinf-fp**2/(f**2+1.0j*gammap*f)
     return eps
 
+def eps_Lorentz(f, fT, fL, gammaT, eps_inf):
+    return eps_1phonon(f, fT, fL, gammaT, gammaT, eps_inf)
+    
 def eps_1phonon(f, fT, fL, gammaT, gammaL, eps_inf):
     """
     1-phonon permittivity model
