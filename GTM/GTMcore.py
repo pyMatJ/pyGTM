@@ -1,62 +1,69 @@
-# -*- coding: utf-8 -*-
+# This file is part of the pyGTM module.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details. 
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#     
+# Copyright (C) Mathieu Jeannin 2019 2020 <math.jeannin@free.fr>.
+
 """
 This program implements the generalized 4x4 transfer matrix (GTM) method 
-poposed in Passler, N. C. and Paarmann, A., JOSA B 34, 2128 (2017) 
-doi.org/10.1364/JOSAB.34.002128
-and corrected in doi.org/10.1364/JOSAB.36.003246, 
-and the layer-resolved absorption proposed in 
-https://arxiv.org/abs/2002.03832. 
+poposed in `Passler, N. C. and Paarmann, A., JOSA B 34, 2128 (2017) 
+<http://doi.org/10.1364/JOSAB.34.002128>`_
+and corrected in 
+`JOSA B 36, 3246 (2019) <http://doi.org/10.1364/JOSAB.36.003246>`_, 
+as well as the layer-resolved absorption proposed in 
+`Passler, Jeannin and Paarman <https://arxiv.org/abs/2002.03832>`_. 
 This code uses inputs from D. Dietze's FSRStools library
 https://github.com/ddietze/FSRStools
 
 Please cite the relevant associated publications if you use this code. 
 
+Author: 
+    - Mathieu Jeannin math.jeannin@free.fr (permanent)
+
+Affiliations: 
+    - Laboratoire de Physique de l'Ecole Normale Superieure (2019)
+    - Centre de Nanosciences et Nanotechnologies (2020)
+
 Layers are represented by the :py:class:`Layer` class that holds all parameters 
 describing the optical properties of a single layer. 
 The optical system is assembled using the :py:class:`System` class.
-
-author: Mathieu Jeannin <math.jeannin@free.fr> (permanent)
-affiliation: Laboratoire de Physique de l'Ecole Normale Superieure (2019)
-             Centre de Nanosciences et Nanotechnologies (2020)
-             
+  
+           
 **Change log:**
-*19-03-2020*:
-    - Adapted the code to compute the layer-resolved absorption as proposed 
-    py Passler et al. in https://arxiv.org/abs/2002.03832, using 
-    System.calculate_Poynting_Absorption_vs_z.
-    - Include the correct calculation of intensity transmission coefficients 
-    in System.calculate_r_t(). **This BREAKS compatibility** with the previous 
-    definition of the function. 
-    - Corrected bugs in System.calculate_E_field and added magnetic field option
-    - Adapted System.calculate_E_field to allow hand-defined, irregular grid and 
-    a shorthand to compute only at layers interfaces. Regular grid with fixed 
-    resolution is left as an option. 
-    
-*20-09-2019*:
-    - Added functions in the `System` class to compute in-plane wavevector of guided modes
-    and dispersion relation for such guided surface modes
-    ** Highly propespective** as it depends on the robustness of the minimization 
-    procedure (or the lack of thereoff).
 
-    
-..
-This file is part of the GTM module.
+    *19-03-2020*:
 
-This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+        - Adapted the code to compute the layer-resolved absorption as proposed 
+          by Passler et al. (https://arxiv.org/abs/2002.03832), using 
+          :py:func:`System.calculate_Poynting_Absorption_vs_z`.
+        
+        - Include the correct calculation of intensity transmission coefficients 
+          in :py:func:`System.calculate_r_t`. 
+          **This BREAKS compatibility** with the previous definition of the function. 
+        
+        - Corrected bugs in :py:func:`System.calculate_Efield` 
+          and added magnetic field option
+        
+        - Adapted :py:func:`System.calculate_Efield` to allow hand-defined, 
+          irregular grid and a shorthand to compute only at layers interfaces. 
+          Regular grid with fixed resolution is left as an option. 
     
-    Copyright (C) Mathieu Jeannin 2019 2020 <math.jeannin@free.fr>.
-    
+    *20-09-2019*:
+        - Added functions in the :py:class:`System` class to compute in-plane 
+          wavevector of guided modes and dispersion relation for such guided surface modes.
+          This is *highly prospective* as it depends on the robustness of the minimization 
+          procedure (or the lack of thereoff)    
 """
 ######## general utilities
 
@@ -82,7 +89,7 @@ def exact_inv(M):
     This should give a higher precision and speed at a reduced noise.
 
     :param matrix M: 4x4 Matrix.
-    :returns: Inverse of this matrix or Moore-Penrose approximation if matrix cannot be inverted.
+    :return: Inverse of this matrix or Moore-Penrose approximation if matrix cannot be inverted.
 
     .. seealso:: http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche23.html
     
@@ -174,6 +181,9 @@ class Layer:
          
 
     def set_thickness(self, thickness):
+        """
+        Sets the layer thickness
+        """
         self.thick = thickness
         
     def set_epsilon(self, epsilon1=None, epsilon2=None, epsilon3=None):
@@ -315,7 +325,8 @@ class Layer:
         
         From this we also get the Poynting vectors. 
         Wavevectors are sorted according to (trans-p, trans-s, refl-p, refl-s)
-        Birefringence is determined according to a threshold value `qsd_thr` set at the beginning of the script. 
+        Birefringence is determined according to a threshold value `qsd_thr` 
+        set at the beginning of the script. 
         """
         Delta_loc = np.zeros((4,4), dtype=np.complex128)
         transmode = np.zeros((2), dtype=np.int)
@@ -530,7 +541,7 @@ class Layer:
 
         :param float zeta: in-plane propagation vector (reduced)
         :param float f: Frequency value.
-        :returns: matrices Ai, Ki, Ai^{-1} and Ti
+        :return: matrices Ai, Ki, Ai^{-1} and Ti
         """
         
         self.calculate_epsilon(f)
@@ -591,11 +602,15 @@ class System:
 
     def set_substrate(self,sub):
         """Set the substrate
+        
+        :param layer sub: instance of the layer class, substrate
         """
         self.substrate=sub
         
     def set_superstrate(self,sup):
         """Set the superstrate
+        
+        :param layer sup: instance of the layer class, superstrate
         """
         self.superstrate=sup
     
@@ -606,27 +621,41 @@ class System:
     
     def get_layer(self,pos):
         """Get the layer at a given position
+        
+        :param int pos: position in the stack
+        :return: the layer at the position `pos`
         """
         return self.layers[pos]
     def get_superstrate(self):
         """Returns the System's superstrate
+        
+        :return: the `System` superstrate
         """
         return self.superstrate
     def get_substrate(self):
         """Returns the System's substrate
+        
+        :return: the `System` substrate
         """
         return self.substrate
     
     def add_layer(self,layer):
         """Add a layer instance.
+        
+        :param layer layer: the layer to be added on the stack
+        
         Note that the layers are added **from superstrate to substrate** order.
         Light is incident from the superstrate.
         
-        .. note:: This function adds a reference to L to the list. So if you are adding the same layer several times, be aware that if you change something for one of them, it changes all of them.
+        Note thate this function adds a reference to L to the list. 
+        If you are adding the same layer several times, be aware that if you 
+        change something for one of them, it changes all of them.
         """
         self.layers.append(layer)
+    
     def del_layer(self,pos):
         """Remove a layer at given position. Does nothing for invalid position.
+        
         :param integer pos: index of layer to be removed.
         """
         if pos >= 0 and pos < len(self.layers):
@@ -635,6 +664,7 @@ class System:
 
     def initialize_sys(self, f):
         """Sets the values of epsilon at given frequency, allowing to define zeta out of the class
+        
         :param float f: frequency (Hz)
         """
         self.superstrate.calculate_epsilon(f)
@@ -649,7 +679,7 @@ class System:
         
         :param float f: frequency (Hz)
         :param complex zeta_sys: in-plane wavevector kx/k0
-        :returns: System transfer matrix np.array((4,4), dtype=np.complex128)
+        :return: System transfer matrix np.array((4,4), dtype=np.complex128)
         """
         Ai_super, Ki_super, Ai_inv_super, T_super = self.superstrate.update(f, zeta_sys)
         Ai_sub, Ki_sub, Ai_inv_sub, T_sub = self.substrate.update(f, zeta_sys)
@@ -697,10 +727,10 @@ class System:
         
         :param complex zeta_sys: incident in-plane wavevector 
         
-        :returns: Complex *field* reflection coefficients r_out=([rpp,rps,rss,rsp])
-        :returns: Real *intensity* reflection coefficients R_out=([Rpp,Rss,Rsp,Tps])
-        :returns: Complex *field* transmition coefficients t=([tpp, tps, tsp, tss])
-        :returns: Real *intensity* transmition coefficients T_out=([Tp,Ts]) (mode-inselective)
+        :return: Complex *field* reflection coefficients r_out=([rpp,rps,rss,rsp])
+        :return: Real *intensity* reflection coefficients R_out=([Rpp,Rss,Rsp,Tps])
+        :return: Complex *field* transmition coefficients t=([tpp, tps, tsp, tss])
+        :return: Real *intensity* transmition coefficients T_out=([Tp,Ts]) (mode-inselective)
         
         """
         # common denominator for all coefficients
@@ -802,10 +832,10 @@ class System:
         :param bool magnetic: boolean to skip or compute the magnetic field vector
         :param float dz: space resolution along propagation (z) axis. Superseed z_vect
         
-        :returns: 1D array of z-coordinates according to dz
-        :returns: (len(z),3)-Array E_out of total electric field in the structure
-        :returns(opt): (len(z),3)-Array H_out of total magnetic field in the structure
-        :returns: list zn of the positions of the different interfaces
+        :return: 1D array of z-coordinates according to dz
+        :return: (len(z),3)-Array E_out of total electric field in the structure
+        :return (opt): (len(z),3)-Array H_out of total magnetic field in the structure
+        :return: list zn of the positions of the different interfaces
         """
 
         self.calculate_GammaStar(f, zeta_sys)
@@ -1094,12 +1124,13 @@ class System:
     def calculate_matelem(self, zeta0, f):
         """
         Returns the relevant quantity to find waveguide modes according 
-        to Davis' paper on multilayers (scalar model doi.org/10.1016/j.optcom.2008.09.043)
-        and then Yeh (4X4 formalism doi.org/10.1016/0039-6028(80)90293-9).
+        to Davis' paper on multilayers (scalar model 
+        http://doi.org/10.1016/j.optcom.2008.09.043)
+        and then Yeh (4X4 formalism http://doi.org/10.1016/0039-6028(80)90293-9).
         
         :param 2-tuple zeta0: Tuple [zeta_r, zeta_i] of real and imaginary part of the wavevector
         :param float f: frequency
-        :returns: matrix element to minimize for dispersion relation (absolute value)
+        :return: matrix element to minimize for dispersion relation (absolute value)
         """
         self.initialize_sys(f)
         zeta_sys = zeta0[0]+1.0j*zeta0[1]
@@ -1118,7 +1149,7 @@ class System:
         :param float f: frequency
         :param list bounds (optional): list of 2-tuple containing (lower, upper) bound for each parameter
         
-        :returns: result of the minimization procedure. Eigenvalue is the list res.x
+        :return: result of the minimization procedure. Eigenvalue is the list res.x
         """
         res = minimize(self.calculate_matelem, zeta0, args=(f), 
                        method='SLSQP', bounds=bounds)
@@ -1137,8 +1168,8 @@ class System:
         :param 2-tuple zeta0: initial guess
         :param list bounds: list of 2-tuple containing (lower, upper) bound for each parameter
         
-        :returns: array of real part of the in-plane wavevector
-        :returns: array of imagniary part of the in-plane wavevector
+        :return: array of real part of the in-plane wavevector
+        :return: array of imagniary part of the in-plane wavevector
         """
         zeta_disp_r = np.zeros(len(fv))
         zeta_disp_i = np.zeros(len(fv))

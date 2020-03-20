@@ -1,6 +1,21 @@
-# -*- coding: utf-8 -*-
+# This file is part of the pyGTM module.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details. 
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#     
+# Copyright (C) Mathieu Jeannin 2019 2020 <math.jeannin@free.fr>.
 """
-Example file for the GTM package.
+Example file for the pyGTM package.
 This file demonstrates the use of the new (20-09-2019) `System` methods 
 for the computation of dispersion relations of surface modes in multilayer media. 
 
@@ -30,7 +45,6 @@ Once the correct wavevector is found, (requires a bit of trial and error)
 the dispersion relation is obtained by sweeping the frequency and 
 following the given local minimum in a step-wise manner, using the 
 `System.disp_vs_f` method. 
-
 """
 
 import numpy as np

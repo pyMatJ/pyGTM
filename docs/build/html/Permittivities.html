@@ -1,0 +1,613 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Material database module &#8212; pyGTM 2.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="Examples.html" />
+    <link rel="prev" title="GTMcore module" href="GTMcore.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyGTM</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="GTMcore.html">GTMcore module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Material database module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="GTMcore.html" title="previous chapter">GTMcore module</a></li>
+      <li>Next: <a href="Examples.html" title="next chapter">Examples</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-GTM.Permittivities">
+<span id="material-database-module"></span><span id="permittivities-label"></span><h1>Material database module<a class="headerlink" href="#module-GTM.Permittivities" title="Permalink to this headline">¶</a></h1>
+<p>Define permittivity functions to be used in the GTM method.</p>
+<p>Utility functions such as Drude or phonon models are defined at the end of 
+the script. Some materials have different definitions according to the 
+frequency range, you should always carefully check if they match your 
+expectations !</p>
+<p>All permittivities are expected to be calculated at frequency f in Hz.</p>
+<dl class="simple">
+<dt><strong>Change log:</strong></dt><dd><dl class="simple">
+<dt><em>19-03-2020</em>:</dt><dd><ul class="simple">
+<li><p>Fixed various bugs in the definition of single resonance materials 
+(GaN, AlN, MoO3, InN, hBN) and added SiC without weak phonon modes</p></li>
+</ul>
+</dd>
+<dt><em>20-09-2019</em>:</dt><dd><ul class="simple">
+<li><p>Fixed database problems for some materials and some mistakes in the 
+permittivity functions. Commented out helper <cite>print</cite> functions.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="function">
+<dt id="GTM.Permittivities.eps_KRS5">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_KRS5</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_KRS5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tabulated values for KRS5 material</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_SiCx">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_SiCx</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_SiCx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Silicon carbide (SiC) in-plane permittivity (x-y)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_SiCz">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_SiCz</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_SiCz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Silicon carbide (SiC) out-of-plane permittivity (z) without weak phonon modes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_SiC6Hx">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_SiC6Hx</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_SiC6Hx" title="Permalink to this definition">¶</a></dt>
+<dd><p>6H-Silicon carbide (6H-SiC) in-plane permittivity (x-y)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_SiC6Hz">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_SiC6Hz</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_SiC6Hz" title="Permalink to this definition">¶</a></dt>
+<dd><p>6H-Silicon carbide (6H-SiC) out-of-plane permittivity (z) with weak phonon modes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_GaNx">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_GaNx</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_GaNx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gallium nitride (GaN) ordinary axis permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_GaNz">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_GaNz</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_GaNz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gallium nitride (GaN) extraordinary axis permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_AlNx">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_AlNx</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_AlNx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aluminium nitride (AlN) ordinary axis permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_AlNz">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_AlNz</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_AlNz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aliuminium nitride (AlN) extraordinary axis permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_hBNx">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_hBNx</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_hBNx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hexagonal boron nitride (hBN) ordinary axis permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_hBNz">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_hBNz</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_hBNz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hexagonal boron nitride (hBN) extraordinary axis permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_InNx">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_InNx</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_InNx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indium nitride (InN) ordinary axis permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_InNz">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_InNz</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_InNz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indium nitride (InN) extraordinary axis permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_MoO3x">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_MoO3x</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_MoO3x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Molybdenum oxide (MoO3) first axis permittivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_MoO3y">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_MoO3y</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_MoO3y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Molybdenum oxide (MoO3) second axis permittivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_MoO3z">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_MoO3z</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_MoO3z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Molybdenum oxide (MoO3) third axis permittivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_GaAs">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_GaAs</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_GaAs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gallium arsenide (GaAs) permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_GaP">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_GaP</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_GaP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gallium phosphide (GaP) permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_InAs">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_InAs</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_InAs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indium arsenide (InAs) permittivity (without excitons)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_Al2O3o">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_Al2O3o</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_Al2O3o" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aluminium oxide (Al2O3) ordinary axis permittivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_Al2O3e">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_Al2O3e</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_Al2O3e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aluminium oxide (Al2O3) extraordinary axis permittivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_BaTiO3">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_BaTiO3</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_BaTiO3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Barium titanate (BaTiO3) permittivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_SiN">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_SiN</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_SiN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Low-stress silicon nitride (SiN) permittivity in the far and mid-infrared.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+<p>Typically for SiN_x PECVD deposited layers, from 
+<a class="reference external" href="https://arxiv.org/pdf/1209.2987.pdf">Cataldo et al., Optics Letters 37, 4200 (2017)</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_Au">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_Au</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_Au" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gold (Au) permittivity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+<p><strong>Attention</strong>, two models are used: a simple Drude model with parameters 
+from <a class="reference external" href="http://doi.org/10.1007/s11468-015-0128-7">Derkachova et al., Plasmonics 11, 941 (2016) (open access)</a> 
+or the tabulated data from Jonhson and Christy 
+(<a class="reference external" href="https://refractiveindex.info/?shelf=main&amp;book=Au&amp;page=Johnson">refractiveindex.info</a>)
+You should check carefully if this works out for you.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_Ag">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_Ag</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_Ag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Silver (Ag) permittivity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+<p><strong>Attention</strong>, two models are used: a simple Drude model or tabulated data. 
+Both are taken from <a class="reference external" href="http://doi.org/10.1103/PhysRevB.91.235137">Yang et al., Phys. Rev. B 91, 235137 (2015)</a>
+You should check carefully if this works out for you.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_BaF2">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_BaF2</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_BaF2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Barium fluoride (BaF2) refractive index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+<p>Originally from <a class="reference external" href="https://apps.dtic.mil/docs/citations/ADA192210">Querry, Contractor Report CRDEC-CR-88009 (1987)</a>
+downloaded from <a class="reference external" href="http://refractiveindex.info">RefractiveIndex.info</a> (2019)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_CaF2">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_CaF2</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_CaF2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calcium fluoride (CaF2) refractive index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+<p>Originally from <a class="reference external" href="https://doi.org/10.1364/AO.2.001103">Malitson, Applied Optics 2, 1103 (1963)</a>
+downloaded from <a class="reference external" href="http://refractiveindex.info">RefractiveIndex.info</a> (2019)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_SiO2">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_SiO2</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_SiO2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Silicium dioxide (SiO2) refractive index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>array</em>) – frequency (array or float)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>permittivity (float or len(f)-array)</p>
+</dd>
+</dl>
+<p>Originally from Popova, Opt. Spectrosc. 33, 444 (1972)
+and and Malitson, J. Opt. Soc. Am. 55, 1205 (1965)
+downloaded from <a class="reference external" href="http://refractiveindex.info">RefractiveIndex.info</a> (2019)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_drude">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_drude</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">fp</em>, <em class="sig-param">gammap</em>, <em class="sig-param">epsinf=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_drude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drude-like permittivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>array</em>) – frequency (Hz)</p></li>
+<li><p><strong>fp</strong> (<em>float</em>) – plasma frequency (Hz)</p></li>
+<li><p><strong>gammap</strong> (<em>float</em>) – mean collision rate (Hz)</p></li>
+<li><p><strong>epsinf</strong> (<em>float</em>) – high frequency permittivity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>complex permittivity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_Lorentz">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_Lorentz</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">fT</em>, <em class="sig-param">fL</em>, <em class="sig-param">gammaT</em>, <em class="sig-param">eps_inf</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_Lorentz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Single Lorentz oscillator model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>array</em>) – frequency (Hz)</p></li>
+<li><p><strong>fT</strong> (<em>float</em>) – frequency of the transverse phonon</p></li>
+<li><p><strong>fL</strong> (<em>float</em>) – frequency of the longitudinal phonon</p></li>
+<li><p><strong>gammaT</strong> (<em>float</em>) – damping rate of the transverse phonon</p></li>
+<li><p><strong>epsinf</strong> (<em>float</em>) – high-frequency permittivity</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_1phonon">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_1phonon</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">fT</em>, <em class="sig-param">fL</em>, <em class="sig-param">gammaT</em>, <em class="sig-param">gammaL</em>, <em class="sig-param">eps_inf</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_1phonon" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 phonon permittivity model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>array</em>) – frequency (Hz)</p></li>
+<li><p><strong>fT</strong> (<em>float</em>) – frequency of the transverse phonon</p></li>
+<li><p><strong>fL</strong> (<em>float</em>) – frequency of the longitudinal phonon</p></li>
+<li><p><strong>gammaT</strong> (<em>float</em>) – damping rate of the transverse phonon</p></li>
+<li><p><strong>gammaL</strong> (<em>float</em>) – damping rate of the longitudinal phonon</p></li>
+<li><p><strong>epsinf</strong> (<em>float</em>) – high-frequency permittivity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>complex permittivity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.Permittivities.eps_3phonon">
+<code class="sig-prename descclassname">GTM.Permittivities.</code><code class="sig-name descname">eps_3phonon</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">fT</em>, <em class="sig-param">fL</em>, <em class="sig-param">gammaT</em>, <em class="sig-param">gammaL</em>, <em class="sig-param">fT1</em>, <em class="sig-param">fL1</em>, <em class="sig-param">fT2</em>, <em class="sig-param">fL2</em>, <em class="sig-param">gammaTw</em>, <em class="sig-param">eps_inf</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.Permittivities.eps_3phonon" title="Permalink to this definition">¶</a></dt>
+<dd><p>3 phonons permittivity model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>array</em>) – frequency (Hz)</p></li>
+<li><p><strong>fT</strong> (<em>float</em>) – frequency of the transverse phonon</p></li>
+<li><p><strong>fL</strong> (<em>float</em>) – frequency of the longitudinal phonon</p></li>
+<li><p><strong>gammaT</strong> (<em>float</em>) – relaxation rate of the transverse phonon</p></li>
+<li><p><strong>gammaL</strong> (<em>float</em>) – relaxation rate of the longitudinal phonon</p></li>
+<li><p><strong>fT1</strong> (<em>float</em>) – frequency of the weak transverse phonon 1</p></li>
+<li><p><strong>fL1</strong> (<em>float</em>) – frequency of the weak longitudinal phonon 1</p></li>
+<li><p><strong>fT2</strong> (<em>float</em>) – frequency of the weak transverse phonon 2</p></li>
+<li><p><strong>fL2</strong> (<em>float</em>) – frequency of the weak longitudinal phonon 2</p></li>
+<li><p><strong>gammaTw</strong> (<em>float</em>) – damping of the transverse phonon</p></li>
+<li><p><strong>epsinf</strong> (<em>float</em>) – high-frequency permittivity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>complex permittivity</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2020, Mathieu Jeannin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Permittivities.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
