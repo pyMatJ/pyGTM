@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Material database module &#8212; pyGTM 2.0.0 documentation</title>
+    <title>Material database &#8212; pyGTM 2.0.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -12,9 +12,9 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Examples" href="Examples.html" />
     <link rel="prev" title="GTMcore module" href="GTMcore.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -38,9 +38,9 @@
 
 <h3>Navigation</h3>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="GTMcore.html">GTMcore module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Material database module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Material database</a></li>
 </ul>
 
 <div class="relations">
@@ -48,7 +48,6 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="GTMcore.html" title="previous chapter">GTMcore module</a></li>
-      <li>Next: <a href="Examples.html" title="next chapter">Examples</a></li>
   </ul></li>
 </ul>
 </div>
@@ -71,22 +70,22 @@
           <div class="body" role="main">
             
   <div class="section" id="module-GTM.Permittivities">
-<span id="material-database-module"></span><span id="permittivities-label"></span><h1>Material database module<a class="headerlink" href="#module-GTM.Permittivities" title="Permalink to this headline">¶</a></h1>
+<span id="material-database"></span><span id="permittivities-label"></span><h1>Material database<a class="headerlink" href="#module-GTM.Permittivities" title="Permalink to this headline">¶</a></h1>
 <p>Define permittivity functions to be used in the GTM method.</p>
-<p>Utility functions such as Drude or phonon models are defined at the end of 
-the script. Some materials have different definitions according to the 
-frequency range, you should always carefully check if they match your 
+<p>Utility functions such as Drude or phonon models are defined at the end of
+the script. Some materials have different definitions according to the
+frequency range, you should always carefully check if they match your
 expectations !</p>
 <p>All permittivities are expected to be calculated at frequency f in Hz.</p>
 <dl class="simple">
 <dt><strong>Change log:</strong></dt><dd><dl class="simple">
 <dt><em>19-03-2020</em>:</dt><dd><ul class="simple">
-<li><p>Fixed various bugs in the definition of single resonance materials 
+<li><p>Fixed various bugs in the definition of single resonance materials
 (GaN, AlN, MoO3, InN, hBN) and added SiC without weak phonon modes</p></li>
 </ul>
 </dd>
 <dt><em>20-09-2019</em>:</dt><dd><ul class="simple">
-<li><p>Fixed database problems for some materials and some mistakes in the 
+<li><p>Fixed database problems for some materials and some mistakes in the
 permittivity functions. Commented out helper <cite>print</cite> functions.</p></li>
 </ul>
 </dd>
@@ -413,7 +412,7 @@ permittivity functions. Commented out helper <cite>print</cite> functions.</p></
 <dd class="field-even"><p>permittivity (float or len(f)-array)</p>
 </dd>
 </dl>
-<p>Typically for SiN_x PECVD deposited layers, from 
+<p>Typically for SiN_x PECVD deposited layers, from
 <a class="reference external" href="https://arxiv.org/pdf/1209.2987.pdf">Cataldo et al., Optics Letters 37, 4200 (2017)</a></p>
 </dd></dl>
 
@@ -429,9 +428,9 @@ permittivity functions. Commented out helper <cite>print</cite> functions.</p></
 <dd class="field-even"><p>permittivity (float or len(f)-array)</p>
 </dd>
 </dl>
-<p><strong>Attention</strong>, two models are used: a simple Drude model with parameters 
-from <a class="reference external" href="http://doi.org/10.1007/s11468-015-0128-7">Derkachova et al., Plasmonics 11, 941 (2016) (open access)</a> 
-or the tabulated data from Jonhson and Christy 
+<p><strong>Attention</strong>, two models are used: a simple Drude model with parameters
+from <a class="reference external" href="http://doi.org/10.1007/s11468-015-0128-7">Derkachova et al., Plasmonics 11, 941 (2016) (open access)</a>
+or the tabulated data from Jonhson and Christy
 (<a class="reference external" href="https://refractiveindex.info/?shelf=main&amp;book=Au&amp;page=Johnson">refractiveindex.info</a>)
 You should check carefully if this works out for you.</p>
 </dd></dl>
@@ -448,7 +447,7 @@ You should check carefully if this works out for you.</p>
 <dd class="field-even"><p>permittivity (float or len(f)-array)</p>
 </dd>
 </dl>
-<p><strong>Attention</strong>, two models are used: a simple Drude model or tabulated data. 
+<p><strong>Attention</strong>, two models are used: a simple Drude model or tabulated data.
 Both are taken from <a class="reference external" href="http://doi.org/10.1103/PhysRevB.91.235137">Yang et al., Phys. Rev. B 91, 235137 (2015)</a>
 You should check carefully if this works out for you.</p>
 </dd></dl>

@@ -15,9 +15,16 @@ GTMcore module
    ---------------
    .. autoclass:: Layer
       :members:
-
+      :member-order: bysource
 
    The System class
    ----------------
    .. autoclass:: System
       :members:
+      :member-order: bysource
+   
+   Additional functions
+   --------------------
+   .. autofunction:: exact_inv
+   
+   .. autofunction:: vacuum_eps

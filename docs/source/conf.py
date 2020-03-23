@@ -12,8 +12,8 @@
 #
 import os
 import sys
-#sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath('.'))
+#sys.path.insert(0, os.path.abspath('../../'))
 #sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath('.')),'GTM','examples'))
 
 
@@ -34,9 +34,9 @@ release = '2.0.0'
 # ones.
 extensions = ['sphinx.ext.autodoc', 
               'sphinx.ext.autosummary',
-              	'sphinxcontrib.fulltoc']#,
+              	'sphinxcontrib.fulltoc',
 #              'sphinx.ext.coverage', 
-#              'sphinx.ext.napoleon']
+              'sphinx.ext.napoleon']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

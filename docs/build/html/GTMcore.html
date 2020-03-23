@@ -12,10 +12,11 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Material database module" href="Permittivities.html" />
-    <link rel="prev" title="Welcome to pyGTM’s documentation" href="index.html" />
+    <link rel="next" title="Material database" href="Permittivities.html" />
+    <link rel="prev" title="Tutorial" href="Tutorial.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -38,21 +39,22 @@
 
 <h3>Navigation</h3>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">GTMcore module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-layer-class">The Layer class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-system-class">The System class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-functions">Additional functions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Permittivities.html">Material database module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Permittivities.html">Material database</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to pyGTM’s documentation</a></li>
-      <li>Next: <a href="Permittivities.html" title="next chapter">Material database module</a></li>
+      <li>Previous: <a href="Tutorial.html" title="previous chapter">Tutorial</a></li>
+      <li>Next: <a href="Permittivities.html" title="next chapter">Material database</a></li>
   </ul></li>
 </ul>
 </div>
@@ -76,52 +78,52 @@
             
   <div class="section" id="module-GTM.GTMcore">
 <span id="gtmcore-module"></span><span id="gtmcore-label"></span><h1>GTMcore module<a class="headerlink" href="#module-GTM.GTMcore" title="Permalink to this headline">¶</a></h1>
-<p>This program implements the generalized 4x4 transfer matrix (GTM) method 
+<p>This module implements the generalized 4x4 transfer matrix (GTM) method
 poposed in <a class="reference external" href="http://doi.org/10.1364/JOSAB.34.002128">Passler, N. C. and Paarmann, A., JOSA B 34, 2128 (2017)</a>
-and corrected in 
-<a class="reference external" href="http://doi.org/10.1364/JOSAB.36.003246">JOSA B 36, 3246 (2019)</a>, 
-as well as the layer-resolved absorption proposed in 
-<a class="reference external" href="https://arxiv.org/abs/2002.03832">Passler, Jeannin and Paarman</a>. 
+and corrected in
+<a class="reference external" href="http://doi.org/10.1364/JOSAB.36.003246">JOSA B 36, 3246 (2019)</a>,
+as well as the layer-resolved absorption proposed in
+<a class="reference external" href="https://arxiv.org/abs/2002.03832">Passler, Jeannin and Paarman</a>.
 This code uses inputs from D. Dietze’s FSRStools library
 <a class="reference external" href="https://github.com/ddietze/FSRStools">https://github.com/ddietze/FSRStools</a></p>
 <p>Please cite the relevant associated publications if you use this code.</p>
 <dl class="simple">
-<dt>Author: </dt><dd><ul class="simple">
+<dt>Author:</dt><dd><ul class="simple">
 <li><p>Mathieu Jeannin <a class="reference external" href="mailto:math&#46;jeannin&#37;&#52;&#48;free&#46;fr">math<span>&#46;</span>jeannin<span>&#64;</span>free<span>&#46;</span>fr</a> (permanent)</p></li>
 </ul>
 </dd>
-<dt>Affiliations: </dt><dd><ul class="simple">
+<dt>Affiliations:</dt><dd><ul class="simple">
 <li><p>Laboratoire de Physique de l’Ecole Normale Superieure (2019)</p></li>
 <li><p>Centre de Nanosciences et Nanotechnologies (2020)</p></li>
 </ul>
 </dd>
 </dl>
-<p>Layers are represented by the <a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a> class that holds all parameters 
-describing the optical properties of a single layer. 
+<p>Layers are represented by the <a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Layer</span></code></a> class that holds all parameters
+describing the optical properties of a single layer.
 The optical system is assembled using the <a class="reference internal" href="#GTM.GTMcore.System" title="GTM.GTMcore.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> class.</p>
 <p><strong>Change log:</strong></p>
 <blockquote>
 <div><p><em>19-03-2020</em>:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Adapted the code to compute the layer-resolved absorption as proposed 
-by Passler et al. (<a class="reference external" href="https://arxiv.org/abs/2002.03832">https://arxiv.org/abs/2002.03832</a>), using 
+<li><p>Adapted the code to compute the layer-resolved absorption as proposed
+by Passler et al. (<a class="reference external" href="https://arxiv.org/abs/2002.03832">https://arxiv.org/abs/2002.03832</a>), using
 <a class="reference internal" href="#GTM.GTMcore.System.calculate_Poynting_Absorption_vs_z" title="GTM.GTMcore.System.calculate_Poynting_Absorption_vs_z"><code class="xref py py-func docutils literal notranslate"><span class="pre">System.calculate_Poynting_Absorption_vs_z()</span></code></a>.</p></li>
-<li><p>Include the correct calculation of intensity transmission coefficients 
-in <a class="reference internal" href="#GTM.GTMcore.System.calculate_r_t" title="GTM.GTMcore.System.calculate_r_t"><code class="xref py py-func docutils literal notranslate"><span class="pre">System.calculate_r_t()</span></code></a>. 
+<li><p>Include the correct calculation of intensity transmission coefficients
+in <a class="reference internal" href="#GTM.GTMcore.System.calculate_r_t" title="GTM.GTMcore.System.calculate_r_t"><code class="xref py py-func docutils literal notranslate"><span class="pre">System.calculate_r_t()</span></code></a>.
 <strong>This BREAKS compatibility</strong> with the previous definition of the function.</p></li>
-<li><p>Corrected bugs in <a class="reference internal" href="#GTM.GTMcore.System.calculate_Efield" title="GTM.GTMcore.System.calculate_Efield"><code class="xref py py-func docutils literal notranslate"><span class="pre">System.calculate_Efield()</span></code></a> 
+<li><p>Corrected bugs in <a class="reference internal" href="#GTM.GTMcore.System.calculate_Efield" title="GTM.GTMcore.System.calculate_Efield"><code class="xref py py-func docutils literal notranslate"><span class="pre">System.calculate_Efield()</span></code></a>
 and added magnetic field option</p></li>
-<li><p>Adapted <a class="reference internal" href="#GTM.GTMcore.System.calculate_Efield" title="GTM.GTMcore.System.calculate_Efield"><code class="xref py py-func docutils literal notranslate"><span class="pre">System.calculate_Efield()</span></code></a> to allow hand-defined, 
-irregular grid and a shorthand to compute only at layers interfaces. 
+<li><p>Adapted <a class="reference internal" href="#GTM.GTMcore.System.calculate_Efield" title="GTM.GTMcore.System.calculate_Efield"><code class="xref py py-func docutils literal notranslate"><span class="pre">System.calculate_Efield()</span></code></a> to allow hand-defined,
+irregular grid and a shorthand to compute only at layers interfaces.
 Regular grid with fixed resolution is left as an option.</p></li>
 </ul>
 </div></blockquote>
 <dl class="simple">
 <dt><em>20-09-2019</em>:</dt><dd><ul class="simple">
-<li><p>Added functions in the <a class="reference internal" href="#GTM.GTMcore.System" title="GTM.GTMcore.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> class to compute in-plane 
+<li><p>Added functions in the <a class="reference internal" href="#GTM.GTMcore.System" title="GTM.GTMcore.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a> class to compute in-plane
 wavevector of guided modes and dispersion relation for such guided surface modes.
-This is <em>highly prospective</em> as it depends on the robustness of the minimization 
+This is <em>highly prospective</em> as it depends on the robustness of the minimization
 procedure (or the lack of thereoff)</p></li>
 </ul>
 </dd>
@@ -135,36 +137,169 @@ procedure (or the lack of thereoff)</p></li>
 <dt id="GTM.GTMcore.Layer">
 <em class="property">class </em><code class="sig-prename descclassname">GTM.GTMcore.</code><code class="sig-name descname">Layer</code><span class="sig-paren">(</span><em class="sig-param">thickness=1e-06</em>, <em class="sig-param">epsilon1=None</em>, <em class="sig-param">epsilon2=None</em>, <em class="sig-param">epsilon3=None</em>, <em class="sig-param">theta=0</em>, <em class="sig-param">phi=0</em>, <em class="sig-param">psi=0</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Layer class. An instance is a single layer:</p>
+<dl class="attribute">
+<dt id="GTM.GTMcore.Layer.thickness">
+<code class="sig-name descname">thickness</code><a class="headerlink" href="#GTM.GTMcore.Layer.thickness" title="Permalink to this definition">¶</a></dt>
+<dd><p>thickness of the layer in m</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.Layer.epsilon1">
+<code class="sig-name descname">epsilon1</code><a class="headerlink" href="#GTM.GTMcore.Layer.epsilon1" title="Permalink to this definition">¶</a></dt>
+<dd><p>function epsilon(frequency) for the first axis. If none, defaults to vacuum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>complex function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.Layer.epsilon2">
+<code class="sig-name descname">epsilon2</code><a class="headerlink" href="#GTM.GTMcore.Layer.epsilon2" title="Permalink to this definition">¶</a></dt>
+<dd><p>function epsilon(frequency) for the second axis. If none, defaults to epsilon1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>complex function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.Layer.epsilon3">
+<code class="sig-name descname">epsilon3</code><a class="headerlink" href="#GTM.GTMcore.Layer.epsilon3" title="Permalink to this definition">¶</a></dt>
+<dd><p>function epsilon(frequency) for the third axis. If none, defaults to epsilon1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>complex function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.Layer.theta">
+<code class="sig-name descname">theta</code><a class="headerlink" href="#GTM.GTMcore.Layer.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Euler angle theta (colatitude) in rad</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.Layer.phi">
+<code class="sig-name descname">phi</code><a class="headerlink" href="#GTM.GTMcore.Layer.phi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Euler angle phi in rad</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.Layer.psi">
+<code class="sig-name descname">psi</code><a class="headerlink" href="#GTM.GTMcore.Layer.psi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Euler angle psi in rad</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>If instanciated with defaults values, it generates a 1um thick layer of air.
+Properties can be checked/changed dynamically using the corresponding get/set methods.</p>
+<dl class="method">
+<dt id="GTM.GTMcore.Layer.set_thickness">
+<code class="sig-name descname">set_thickness</code><span class="sig-paren">(</span><em class="sig-param">thickness</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.set_thickness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the layer thickness</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>thickness</strong> (<em>float</em>) – the layer thickness (in m)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.Layer.set_epsilon">
+<code class="sig-name descname">set_epsilon</code><span class="sig-paren">(</span><em class="sig-param">epsilon1=&lt;function vacuum_eps&gt;</em>, <em class="sig-param">epsilon2=None</em>, <em class="sig-param">epsilon3=None</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.set_epsilon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the dielectric functions for the three main axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>thickness</strong> (<em>float</em>) – thickness of the layer in m</p></li>
-<li><p><strong>epsilon1</strong> (<em>function</em>) – function epsilon(frequency) for the first axis. If none, defaults to vacuum.</p></li>
-<li><p><strong>epsilon2</strong> (<em>function</em>) – function epsilon(frequency) for the second axis. If none, defaults to epsilon1.</p></li>
-<li><p><strong>epsilon3</strong> (<em>function</em>) – function epsilon(frequency) for the third axis. If none, defaults to epsilon1.</p></li>
-<li><p><strong>theta</strong> (<em>float</em>) – Euler angle theta (colatitude)</p></li>
-<li><p><strong>phi</strong> (<em>float</em>) – Euler angle phi</p></li>
-<li><p><strong>psi</strong> (<em>float</em>) – Euler angle psi</p></li>
+<li><p><strong>epsilon1</strong> (<em>func</em>) – function epsilon(frequency) for the first axis. If none, defaults to <a class="reference internal" href="#GTM.GTMcore.vacuum_eps" title="GTM.GTMcore.vacuum_eps"><code class="xref py py-func docutils literal notranslate"><span class="pre">vacuum_eps()</span></code></a></p></li>
+<li><p><strong>epsilon2</strong> (<em>complex function</em>) – function epsilon(frequency) for the second axis. If none, defaults to epsilon1.</p></li>
+<li><p><strong>epsilon3</strong> (<em>complex function</em>) – function epsilon(frequency) for the third axis. If none, defaults to epsilon1.</p></li>
+<li><p><strong>epsilon1</strong> – </p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Each <em>epsilon_i</em> function returns the dielectric constant along axis i as
+a function of the frequency f in Hz.</p>
+<p>If no function is given for epsilon1, it defaults to <a class="reference internal" href="#GTM.GTMcore.vacuum_eps" title="GTM.GTMcore.vacuum_eps"><code class="xref py py-func docutils literal notranslate"><span class="pre">vacuum_eps()</span></code></a> (1.0 everywhere).
+epsilon2 and epsilon3 default to epsilon1: if None, a homogeneous material is assumed</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="GTM.GTMcore.Layer.calculate_epsilon">
 <code class="sig-name descname">calculate_epsilon</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.calculate_epsilon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the value of epsilon in the (rotated) lab frame.</p>
-<p>The values are set according to the epsilon_fi (i=1..3) functions 
-defined using the ‘set_epsilon’ method, at the given frequency f. 
-The rotation w/ respect to the lab frame is computed using the Euler angles.</p>
-<p>** Use only explicitely if you don’t use the <cite>update</cite> function **</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>float</em>) – frequency (in Hz)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The values are set according to the epsilon_fi (i=1..3) functions
+defined using the <a class="reference internal" href="#GTM.GTMcore.Layer.set_epsilon" title="GTM.GTMcore.Layer.set_epsilon"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_epsilon()</span></code></a> method, at the given frequency f.
+The rotation with respect to the lab frame is computed using the Euler angles.</p>
+<p>Use only explicitely if you <em>don’t</em> use the <a class="reference internal" href="#GTM.GTMcore.Layer.update" title="GTM.GTMcore.Layer.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">Layer.update()</span></code></a> function!</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="GTM.GTMcore.Layer.calculate_gamma">
-<code class="sig-name descname">calculate_gamma</code><span class="sig-paren">(</span><em class="sig-param">zeta</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.calculate_gamma" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the gamma matrix</p>
+<dt id="GTM.GTMcore.Layer.set_euler">
+<code class="sig-name descname">set_euler</code><span class="sig-paren">(</span><em class="sig-param">theta</em>, <em class="sig-param">phi</em>, <em class="sig-param">psi</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.set_euler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the values for the Euler rotations angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>zeta</strong> (<em>complex</em>) – in-plane reduced wavevector kx/k0</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>theta</strong> (<em>float</em>) – Euler angle theta (colatitude) in rad</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – Euler angle phi in rad</p></li>
+<li><p><strong>psi</strong> (<em>float</em>) – Euler angle psi in rad</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -175,61 +310,75 @@ The rotation w/ respect to the lab frame is computed using the Euler angles.</p>
 <dd><p>Calculate the principal matrices necessary for the GTM algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>zeta</strong> (<em>complex128</em>) – in-place reduced wavevector kx/k0 in the system.</p>
+<dd class="field-odd"><p><strong>zeta</strong> (<em>complex</em>) – In-plane reduced wavevector kx/k0 in the system.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
 <p>Note that zeta is conserved through the whole system and set externaly
-using the angle of incidence and System.superstrate.epsilon[0,0] value</p>
-<p>** Requires prior execution of <cite>calculate_epsilon</cite> **</p>
+using the angle of incidence and <cite>System.superstrate.epsilon[0,0]</cite> value</p>
+<p>Requires prior execution of <a class="reference internal" href="#GTM.GTMcore.Layer.calculate_epsilon" title="GTM.GTMcore.Layer.calculate_epsilon"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculate_epsilon()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="GTM.GTMcore.Layer.calculate_q">
 <code class="sig-name descname">calculate_q</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.calculate_q" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function calculates the 4 out-of-plane wavevectors for the current layer.</p>
-<p>From this we also get the Poynting vectors. 
+<dd><p>Calculates the 4 out-of-plane wavevectors for the current layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>From this we also get the Poynting vectors.
 Wavevectors are sorted according to (trans-p, trans-s, refl-p, refl-s)
-Birefringence is determined according to a threshold value <cite>qsd_thr</cite> 
+Birefringence is determined according to a threshold value <cite>qsd_thr</cite>
 set at the beginning of the script.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="GTM.GTMcore.Layer.calculate_transfer_matrix">
-<code class="sig-name descname">calculate_transfer_matrix</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">zeta</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.calculate_transfer_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the transfer matrix of the whole layer T=APA^{-1}</p>
+<dt id="GTM.GTMcore.Layer.calculate_gamma">
+<code class="sig-name descname">calculate_gamma</code><span class="sig-paren">(</span><em class="sig-param">zeta</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.calculate_gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the gamma matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>f</strong> (<em>float</em>) – frequency</p></li>
-<li><p><strong>zeta</strong> (<em>complex</em>) – reduced in-plane wavevector kx/k0</p></li>
-</ul>
+<dd class="field-odd"><p><strong>zeta</strong> (<em>complex</em>) – in-plane reduced wavevector kx/k0</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="GTM.GTMcore.Layer.set_epsilon">
-<code class="sig-name descname">set_epsilon</code><span class="sig-paren">(</span><em class="sig-param">epsilon1=None</em>, <em class="sig-param">epsilon2=None</em>, <em class="sig-param">epsilon3=None</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.set_epsilon" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the dielectric functions for the three main axis.</p>
-<p>Each epsilon_i function returns the dielectric constant along axis i as 
-a function of the frequency f in Hz.</p>
-<p>epsilon1 defaults to 1.0
-epsilon2 and epsilon3 default to epsilon1: if None, a homogeneous material is assumed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.Layer.set_euler">
-<code class="sig-name descname">set_euler</code><span class="sig-paren">(</span><em class="sig-param">theta</em>, <em class="sig-param">phi</em>, <em class="sig-param">psi</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.set_euler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the values for the Euler rotations angles. 
-:param float theta: Euler angle theta (colatitude)
-:param float phi: Euler angle phi
-:param float psi: Euler angle psi</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.Layer.set_thickness">
-<code class="sig-name descname">set_thickness</code><span class="sig-paren">(</span><em class="sig-param">thickness</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.set_thickness" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the layer thickness</p>
+<dt id="GTM.GTMcore.Layer.calculate_transfer_matrix">
+<code class="sig-name descname">calculate_transfer_matrix</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">zeta</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.Layer.calculate_transfer_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the transfer matrix of the whole layer <span class="math notranslate nohighlight">\(T_i=A_iP_iA_i^{-1}\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>float</em>) – frequency (in Hz)</p></li>
+<li><p><strong>zeta</strong> (<em>complex</em>) – reduced in-plane wavevector kx/k0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -239,12 +388,18 @@ epsilon2 and epsilon3 default to epsilon1: if None, a homogeneous material is as
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>zeta</strong> (<em>float</em>) – in-plane propagation vector (reduced)</p></li>
-<li><p><strong>f</strong> (<em>float</em>) – Frequency value.</p></li>
+<li><p><strong>f</strong> (<em>float</em>) – frequency (in Hz)</p></li>
+<li><p><strong>zeta</strong> (<em>complex</em>) – reduced in-plane wavevector kx/k0</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>matrices Ai, Ki, Ai^{-1} and Ti</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>Ai</strong> (<em>4x4-array</em>) – Boundary matrix <span class="math notranslate nohighlight">\(A_i\)</span> of the layer</p></li>
+<li><p><strong>Ki</strong> (<em>4x4-array</em>) – Propagation matrix <span class="math notranslate nohighlight">\(K_i\)</span> of the layer</p></li>
+<li><p><strong>Ai_inv</strong> (<em>4x4-array</em>) – Inverse of the <span class="math notranslate nohighlight">\(A_i\)</span> matrix</p></li>
+<li><p><strong>Ti</strong> (<em>4x4-array</em>) – Transfer matrix of the whole layer</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -258,43 +413,291 @@ epsilon2 and epsilon3 default to epsilon1: if None, a homogeneous material is as
 <dt id="GTM.GTMcore.System">
 <em class="property">class </em><code class="sig-prename descclassname">GTM.GTMcore.</code><code class="sig-name descname">System</code><span class="sig-paren">(</span><em class="sig-param">substrate=None</em>, <em class="sig-param">superstrate=None</em>, <em class="sig-param">layers=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System" title="Permalink to this definition">¶</a></dt>
 <dd><p>System class. An instance is an optical system with substrate, superstrate and layers.</p>
+<dl class="attribute">
+<dt id="GTM.GTMcore.System.theta">
+<code class="sig-name descname">theta</code><a class="headerlink" href="#GTM.GTMcore.System.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Angle of incidence, in radians</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>theta</strong> (<em>float</em>) – angle of incidence, in radians</p></li>
-<li><p><strong>substrate</strong> (<em>layer</em>) – the substrate layer. defaults to vacuum (empty layer instance)</p></li>
-<li><p><strong>superstrate</strong> (<em>layer</em>) – the superstrate layer, defaults to vacuum (empty layer instance)</p></li>
-<li><p><strong>layers</strong> (<em>list</em>) – list of the layers</p></li>
-</ul>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.System.substrate">
+<code class="sig-name descname">substrate</code><a class="headerlink" href="#GTM.GTMcore.System.substrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The substrate layer. Defaults to vacuum (empty layer instance)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer">Layer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.System.superstrate">
+<code class="sig-name descname">superstrate</code><a class="headerlink" href="#GTM.GTMcore.System.superstrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The superstrate layer, defaults to vacuum (empty layer instance)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer">Layer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="GTM.GTMcore.System.layers">
+<code class="sig-name descname">layers</code><a class="headerlink" href="#GTM.GTMcore.System.layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of the layers in the system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list of layers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
 <p>Layers can be added and removed (not inserted).</p>
-<p>The whole system’s transfer matrix is computed using calculate_GammaStar, 
-which calls layer.update() for each layer.
-General reflection and transmission coeffs. functions are given, they require prior 
-execution of calculate_GammaStar.
+<p>The whole system’s transfer matrix is computed using <a class="reference internal" href="#GTM.GTMcore.System.calculate_GammaStar" title="GTM.GTMcore.System.calculate_GammaStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculate_GammaStar()</span></code></a>,
+which calls <a class="reference internal" href="#GTM.GTMcore.Layer.update" title="GTM.GTMcore.Layer.update"><code class="xref py py-func docutils literal notranslate"><span class="pre">Layer.update()</span></code></a> for each layer.
+General reflection and transmission coefficient functions are given, they require prior
+execution of <a class="reference internal" href="#GTM.GTMcore.System.calculate_GammaStar" title="GTM.GTMcore.System.calculate_GammaStar"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculate_GammaStar()</span></code></a>.
 The electric fields can be visualized in the case of incident plane wave
-using calculate_Efield</p>
+using <a class="reference internal" href="#GTM.GTMcore.System.calculate_Efield" title="GTM.GTMcore.System.calculate_Efield"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculate_Efield()</span></code></a></p>
+<dl class="method">
+<dt id="GTM.GTMcore.System.set_substrate">
+<code class="sig-name descname">set_substrate</code><span class="sig-paren">(</span><em class="sig-param">sub</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.set_substrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the substrate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sub</strong> (<a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer"><em>Layer</em></a>) – Instance of the layer class, substrate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.set_superstrate">
+<code class="sig-name descname">set_superstrate</code><span class="sig-paren">(</span><em class="sig-param">sup</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.set_superstrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the superstrate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sup</strong> (<a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer"><em>Layer</em></a>) – Instance of the layer class, superstrate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.get_all_layers">
+<code class="sig-name descname">get_all_layers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_all_layers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of all layers in the system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>l</strong> – list of all layers</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.get_layer">
+<code class="sig-name descname">get_layer</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the layer at a given position</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pos</strong> (<em>int</em>) – position in the stack</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>L</strong> – The layer at the position <cite>pos</cite></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer">Layer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.get_superstrate">
+<code class="sig-name descname">get_superstrate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_superstrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the System’s superstrate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>L</strong> – The system superstrate</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer">Layer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.get_substrate">
+<code class="sig-name descname">get_substrate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_substrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the System’s substrate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>L</strong> – The system substrate</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer">Layer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="GTM.GTMcore.System.add_layer">
 <code class="sig-name descname">add_layer</code><span class="sig-paren">(</span><em class="sig-param">layer</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.add_layer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a layer instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>layer</strong> (<em>layer</em>) – the layer to be added on the stack</p>
+<dd class="field-odd"><p><strong>layer</strong> (<a class="reference internal" href="#GTM.GTMcore.Layer" title="GTM.GTMcore.Layer"><em>Layer</em></a>) – The layer to be added on the stack</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
-<p>Note that the layers are added <strong>from superstrate to substrate</strong> order.
-Light is incident from the superstrate.</p>
-<p>Note thate this function adds a reference to L to the list. 
-If you are adding the same layer several times, be aware that if you 
+<p class="rubric">Notes</p>
+<p>The layers are added <em>from superstrate to substrate</em> order.
+Light is incident <em>from the superstrate</em>.</p>
+<p>Note thate this function adds a reference to L to the list.
+If you are adding the same layer several times, be aware that if you
 change something for one of them, it changes all of them.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.del_layer">
+<code class="sig-name descname">del_layer</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.del_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a layer at given position. Does nothing for invalid position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pos</strong> (<em>int</em>) – Index of layer to be removed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.initialize_sys">
+<code class="sig-name descname">initialize_sys</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.initialize_sys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the values of epsilon at the given frequency in all the layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>float</em>) – Frequency (Hz)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function allows to define the in-plane wavevector (<span class="math notranslate nohighlight">\(zeta\)</span>)
+outside of the class, and thus to explore also guided modes of the system.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.calculate_GammaStar">
+<code class="sig-name descname">calculate_GammaStar</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">zeta_sys</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_GammaStar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the whole system’s transfer matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>float</em>) – Frequency (Hz)</p></li>
+<li><p><strong>zeta_sys</strong> (<em>complex</em>) – In-plane wavevector kx/k0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>GammaStar</strong> – System transfer matrix <span class="math notranslate nohighlight">\(\Gamma^{*}\)</span></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>4x4 complex matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="GTM.GTMcore.System.calculate_r_t">
+<code class="sig-name descname">calculate_r_t</code><span class="sig-paren">(</span><em class="sig-param">zeta_sys</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_r_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate various field and intensity reflection and transmission coefficients, as well as the 4-valued vector of transmitted field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>zeta_sys</strong> (<em>complex</em>) – Incident in-plane wavevector</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>r_out</strong> (<em>len(4)-array</em>) – Complex <em>field</em> reflection coefficients r_out=([rpp,rps,rss,rsp])</p></li>
+<li><p><strong>R_out</strong> (<em>len(4)-array</em>) – Real <em>intensity</em> reflection coefficients R_out=([Rpp,Rss,Rsp,Tps])</p></li>
+<li><p><strong>t_out</strong> (<em>len(4)-array</em>) – Complex <em>field</em> transmition coefficients t=([tpp, tps, tsp, tss])</p></li>
+<li><p><strong>T_out</strong> (<em>len(4)-array</em>) – Real <em>intensity</em> transmition coefficients T_out=([Tp,Ts]) (mode-inselective)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p><strong>IMPORTANT</strong>
+..version 19-03-2020:
+All intensity coefficients are now well defined. Transmission is defined
+mode-independently. It could be defined mode-dependently for non-birefringent
+substrates in future versions.
+The new definition of this function <strong>BREAKS compatibility</strong> with the previous
+one.</p>
+<p>..version 13-09-2019:
+Note that the field reflectivity and transmission coefficients
+r and t are well defined. The intensity reflection coefficient is also correct.
+However, the intensity transmission coefficients T are ill-defined so far.
+This will be corrected upon future publication of the correct intensity coefficients.</p>
+<p>Note also the different ordering of the coefficients, for consistency w/ Passler’s matlab code</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="GTM.GTMcore.System.calculate_Efield">
 <code class="sig-name descname">calculate_Efield</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">zeta_sys</em>, <em class="sig-param">z_vect=None</em>, <em class="sig-param">x=0.0</em>, <em class="sig-param">magnetic=False</em>, <em class="sig-param">dz=None</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_Efield" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the electric field profiles for both s-pol and p-pol excitation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>float</em>) – frequency (Hz)</p></li>
+<li><p><strong>zeta_sys</strong> (<em>complex</em>) – in-plane normalized wavevector kx/k0</p></li>
+<li><p><strong>z_vect</strong> (<em>1Darray</em>) – Coordinates at which the calculation is done. if None, the layers boundaries are used.</p></li>
+<li><p><strong>x</strong> (<em>float</em><em> or </em><em>1D array</em>) – x-coordinates for (future) 2D plot of the electric field. Not yet implemented</p></li>
+<li><p><strong>magnetic</strong> (<em>bool</em>) – Boolean to skip or compute the magnetic field vector</p></li>
+<li><p><strong>dz</strong> (<em>float</em><em> (</em><em>optional</em><em>)</em>) – Space resolution along propagation (z) axis. Superseed z_vect</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>z</strong> (<em>1Darray</em>) – 1D array of z-coordinates according to dz</p></li>
+<li><p><strong>E_out</strong> (<em>(len(z),3)-Array</em>) – Total electric field in the structure</p></li>
+<li><p><strong>H_out (opt)</strong> (<em>(len(z),3)-Array</em>) – Total magnetic field in the structure</p></li>
+<li><p><strong>zn</strong> (<em>list</em>) – Positions of the different interfaces</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
 <dl class="simple">
 <dt>..Version 19-03-2020:</dt><dd><p>changed keywords to add z_vect
 z_vect is used for either minimal computation (using get_layers_boundaries)
@@ -311,47 +714,6 @@ Poyting and absorption defined in a separate function</p>
 <dt>..Version 13-09-2019:</dt><dd><p>the 2D field profile is not implemented yet. x should be left to default</p>
 </dd>
 </dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>f</strong> (<em>float</em>) – frequency (Hz)</p></li>
-<li><p><strong>zeta_sys</strong> (<em>complex</em>) – in-plane normalized wavevector kx/k0</p></li>
-<li><p><strong>z_vect</strong> (<em>float</em>) – coordinates at which the calculation is done. if None, the layers boundaries are used.</p></li>
-<li><p><strong>x</strong> (<em>array</em>) – x-coordinates for (future) 2D plot of the electric field.</p></li>
-<li><p><strong>magnetic</strong> (<em>bool</em>) – boolean to skip or compute the magnetic field vector</p></li>
-<li><p><strong>dz</strong> (<em>float</em>) – space resolution along propagation (z) axis. Superseed z_vect</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>1D array of z-coordinates according to dz</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>(len(z),3)-Array E_out of total electric field in the structure</p>
-</dd>
-<dt class="field-even">Return (opt)</dt>
-<dd class="field-even"><p>(len(z),3)-Array H_out of total magnetic field in the structure</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>list zn of the positions of the different interfaces</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.calculate_GammaStar">
-<code class="sig-name descname">calculate_GammaStar</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">zeta_sys</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_GammaStar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the whole system’s transfer matrix GammaStar</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>f</strong> (<em>float</em>) – frequency (Hz)</p></li>
-<li><p><strong>zeta_sys</strong> (<em>complex</em>) – in-plane wavevector kx/k0</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>System transfer matrix np.array((4,4), dtype=np.complex128)</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
@@ -361,150 +723,13 @@ Poyting and absorption defined in a separate function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>z</strong> (<em>array</em>) – spatial coordinate for the fields</p></li>
-<li><p><strong>E</strong> (<em>array</em>) – 6-components Electric field vector (p- or s- in) along z</p></li>
-<li><p><strong>H</strong> (<em>array</em>) – 6-components Magnetic field vector (p- or s- in) along z</p></li>
-<li><p><strong>R</strong> (<em>array</em>) – Reflectivity from calculate_r_t()</p></li>
+<li><p><strong>z</strong> (<em>1Darray</em>) – Spatial coordinate for the fields</p></li>
+<li><p><strong>E</strong> (<em>1Darray</em>) – 6-components Electric field vector (p- or s- in) along z</p></li>
+<li><p><strong>H</strong> (<em>1Darray</em>) – 6-components Magnetic field vector (p- or s- in) along z</p></li>
+<li><p><strong>R</strong> (<em>len</em><em>(</em><em>4</em><em>)</em><em>-array</em>) – Reflectivity from <a class="reference internal" href="#GTM.GTMcore.System.calculate_r_t" title="GTM.GTMcore.System.calculate_r_t"><code class="xref py py-func docutils literal notranslate"><span class="pre">calculate_r_t()</span></code></a></p></li>
+<li><p><strong>S_out</strong> (<em>6xlen</em><em>(</em><em>z</em><em>) </em><em>array</em>) – 6 components (p//s) Poyting vector along z</p></li>
+<li><p><strong>A_out</strong> (<em>2xlen</em><em>(</em><em>z</em><em>)</em>) – 2 components (p//s) absorption along z</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return array S_out</dt>
-<dd class="field-even"><p>6 components (p//s) Poyting vector along z</p>
-</dd>
-<dt class="field-odd">Return array A_out</dt>
-<dd class="field-odd"><p>2 components (p//s) absorption along z</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.calculate_eigen_wv">
-<code class="sig-name descname">calculate_eigen_wv</code><span class="sig-paren">(</span><em class="sig-param">zeta0</em>, <em class="sig-param">f</em>, <em class="sig-param">bounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_eigen_wv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the eigenmode in-plane wavevector that shows guiding along the plane.
-Based on the idea that guided mode := an output field exists with no input field
-This is <strong>strongly</strong> dependant on the minimization procedure and thus 
-has to be consistently and carefully checked.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>zeta0</strong> (<em>2-tuple</em>) – initial guess for the minimization procedure</p></li>
-<li><p><strong>f</strong> (<em>float</em>) – frequency</p></li>
-<li><p><strong>bounds</strong><strong> (</strong><strong>optional</strong><strong>)</strong> (<em>list</em>) – list of 2-tuple containing (lower, upper) bound for each parameter</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>result of the minimization procedure. Eigenvalue is the list res.x</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.calculate_matelem">
-<code class="sig-name descname">calculate_matelem</code><span class="sig-paren">(</span><em class="sig-param">zeta0</em>, <em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_matelem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the relevant quantity to find waveguide modes according 
-to Davis’ paper on multilayers (scalar model 
-<a class="reference external" href="http://doi.org/10.1016/j.optcom.2008.09.043">http://doi.org/10.1016/j.optcom.2008.09.043</a>)
-and then Yeh (4X4 formalism <a class="reference external" href="http://doi.org/10.1016/0039-6028(80)90293-9">http://doi.org/10.1016/0039-6028(80)90293-9</a>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>zeta0</strong> (<em>2-tuple</em>) – Tuple [zeta_r, zeta_i] of real and imaginary part of the wavevector</p></li>
-<li><p><strong>f</strong> (<em>float</em>) – frequency</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>matrix element to minimize for dispersion relation (absolute value)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.calculate_r_t">
-<code class="sig-name descname">calculate_r_t</code><span class="sig-paren">(</span><em class="sig-param">zeta_sys</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_r_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate various field and intensity reflection and transmission coefficients, as well as the 4-valued vector of transmitted field.</p>
-<p><strong>IMPORTANT</strong> 
-..version 19-03-2020
-All intensity coefficients are now well defined. Transmission is defined 
-mode-independently. It could be defined mode-dependently for non-birefringent 
-substrates in future versions. 
-The new definition of this function <strong>BREAKS compatibility</strong> with the previous 
-one.</p>
-<p>..version 13-09-2019
-Note that the field reflectivity and transmission coefficients 
-r and t are well defined. The intensity reflection coefficient is also correct. 
-However, the intensity transmission coefficients T are ill-defined so far. 
-This will be corrected upon future publication of the correct intensity coefficients.</p>
-<p>Note also the different ordering of the coefficients, for consistency w/ Passler’s matlab code</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>zeta_sys</strong> (<em>complex</em>) – incident in-plane wavevector</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Complex <em>field</em> reflection coefficients r_out=([rpp,rps,rss,rsp])</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Real <em>intensity</em> reflection coefficients R_out=([Rpp,Rss,Rsp,Tps])</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Complex <em>field</em> transmition coefficients t=([tpp, tps, tsp, tss])</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Real <em>intensity</em> transmition coefficients T_out=([Tp,Ts]) (mode-inselective)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.del_layer">
-<code class="sig-name descname">del_layer</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.del_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove a layer at given position. Does nothing for invalid position.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pos</strong> (<em>integer</em>) – index of layer to be removed.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.disp_vs_f">
-<code class="sig-name descname">disp_vs_f</code><span class="sig-paren">(</span><em class="sig-param">fv</em>, <em class="sig-param">zeta0</em>, <em class="sig-param">bounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.disp_vs_f" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs a frequency dependent search of the eigenwavevector for a guided mode
-to get the dispersion relation of a surface mode.</p>
-<p>Provided a reasonable initial guess for the first frequency point, we 
-use the eigen_wv from the above method and follow its value as a function 
-of frequency in a stepping manner.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fv</strong> (<em>array</em>) – array of frequencies</p></li>
-<li><p><strong>zeta0</strong> (<em>2-tuple</em>) – initial guess</p></li>
-<li><p><strong>bounds</strong> (<em>list</em>) – list of 2-tuple containing (lower, upper) bound for each parameter</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>array of real part of the in-plane wavevector</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>array of imagniary part of the in-plane wavevector</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.get_all_layers">
-<code class="sig-name descname">get_all_layers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_all_layers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the list of all layers in the system</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.get_layer">
-<code class="sig-name descname">get_layer</code><span class="sig-paren">(</span><em class="sig-param">pos</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the layer at a given position</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pos</strong> (<em>int</em>) – position in the stack</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the layer at the position <cite>pos</cite></p>
 </dd>
 </dl>
 </dd></dl>
@@ -512,10 +737,17 @@ of frequency in a stepping manner.</p>
 <dl class="method">
 <dt id="GTM.GTMcore.System.get_layers_boundaries">
 <code class="sig-name descname">get_layers_boundaries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_layers_boundaries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the z-position of all boundaries, including the “top” of the 
-superstrate and the “bottom” of the substrate. This corresponds to where 
+<dd><p>Return the z-position of all boundaries, including the “top” of the
+superstrate and the “bottom” of the substrate. This corresponds to where
 the fields should be evaluated to get a minimum of information</p>
-<p>“return” : array of layer boundary positions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>zn</strong> – Array of layer boundary positions</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>1Darray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -524,69 +756,137 @@ the fields should be evaluated to get a minimum of information</p>
 <dd><p>Extract the permittivity tensor at given z in the structure</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>z</strong> (<em>array</em>) – array of points to sample the permittivity</p>
+<dd class="field-odd"><p><strong>z</strong> (<em>1Darray</em>) – Array of points to sample the permittivity</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>array (3x3xlen(z)) of the permittivity tensor</p>
+<dd class="field-even"><p><strong>eps</strong> – Complex permittivity tensor as a function of z</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>3x3xlen(z)-array</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="GTM.GTMcore.System.get_substrate">
-<code class="sig-name descname">get_substrate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_substrate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the System’s substrate</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the <cite>System</cite> substrate</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.get_superstrate">
-<code class="sig-name descname">get_superstrate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.get_superstrate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the System’s superstrate</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the <cite>System</cite> superstrate</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="GTM.GTMcore.System.initialize_sys">
-<code class="sig-name descname">initialize_sys</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.initialize_sys" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the values of epsilon at given frequency, allowing to define zeta out of the class</p>
+<dt id="GTM.GTMcore.System.calculate_matelem">
+<code class="sig-name descname">calculate_matelem</code><span class="sig-paren">(</span><em class="sig-param">zeta0</em>, <em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_matelem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the common denominator of all reflexion/transmission coefficients.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>f</strong> (<em>float</em>) – frequency (Hz)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zeta0</strong> (<em>2-tuple</em>) – Tuple [zeta_r, zeta_i] of real and imaginary part of the wavevector</p></li>
+<li><p><strong>f</strong> (<em>float</em>) – frequency (in Hz)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>matelem</strong> – Matrix element to minimize for dispersion relation (absolute value)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>complex</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Returns the relevant quantity to find waveguide modes according
+to Davis’ paper on multilayers (scalar model
+<a class="reference external" href="http://doi.org/10.1016/j.optcom.2008.09.043">http://doi.org/10.1016/j.optcom.2008.09.043</a>)
+and then Yeh (4X4 formalism <a class="reference external" href="http://doi.org/10.1016/0039-6028(80)90293-9">http://doi.org/10.1016/0039-6028(80)90293-9</a>).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="GTM.GTMcore.System.set_substrate">
-<code class="sig-name descname">set_substrate</code><span class="sig-paren">(</span><em class="sig-param">sub</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.set_substrate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the substrate</p>
+<dt id="GTM.GTMcore.System.calculate_eigen_wv">
+<code class="sig-name descname">calculate_eigen_wv</code><span class="sig-paren">(</span><em class="sig-param">zeta0</em>, <em class="sig-param">f</em>, <em class="sig-param">bounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.calculate_eigen_wv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the eigenmode in-plane wavevector that shows guiding along the plane.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sub</strong> (<em>layer</em>) – instance of the layer class, substrate</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zeta0</strong> (<em>2-tuple</em>) – Initial guess for the minimization procedure</p></li>
+<li><p><strong>f</strong> (<em>float</em>) – Frequency (in Hz)</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em> (</em><em>optional</em><em>)</em>) – list of 2-tuple containing (lower, upper) bound for each parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>res</strong> – Result of the minimization procedure. Eigenvalue is the list res.x</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>OptimizeResult</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Based on the idea that guided mode := an output field exists with no input field
+This is <strong>strongly</strong> dependant on the minimization procedure and thus
+has to be consistently and carefully checked.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="GTM.GTMcore.System.set_superstrate">
-<code class="sig-name descname">set_superstrate</code><span class="sig-paren">(</span><em class="sig-param">sup</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.set_superstrate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the superstrate</p>
+<dt id="GTM.GTMcore.System.disp_vs_f">
+<code class="sig-name descname">disp_vs_f</code><span class="sig-paren">(</span><em class="sig-param">fv</em>, <em class="sig-param">zeta0</em>, <em class="sig-param">bounds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.System.disp_vs_f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a frequency dependent search of the eigenwavevector for a guided mode
+to get the dispersion relation of a surface mode.</p>
+<p>Provided a reasonable initial guess for the first frequency point, we
+use the eigen_wv from the above method and follow its value as a function
+of frequency in a stepping manner.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sup</strong> (<em>layer</em>) – instance of the layer class, superstrate</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fv</strong> (<em>1Darray</em>) – Array of frequencies</p></li>
+<li><p><strong>zeta0</strong> (<em>2-tuple</em>) – Initial guess for the minimization</p></li>
+<li><p><strong>bounds</strong> (<em>list</em>) – list of 2-tuple containing (lower, upper) bound for each parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>zeta_disp_r</strong> (<em>1Darray (complex)</em>) – Array of real part of the in-plane wavevector</p></li>
+<li><p><strong>zeta_disp_i</strong> (<em>1Darray (complex)</em>) – Array of imaginary part of the in-plane wavevector</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="additional-functions">
+<h2>Additional functions<a class="headerlink" href="#additional-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="GTM.GTMcore.exact_inv">
+<code class="sig-prename descclassname">GTM.GTMcore.</code><code class="sig-name descname">exact_inv</code><span class="sig-paren">(</span><em class="sig-param">M</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.exact_inv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the ‘exact’ inverse of a 4x4 matrix using the analytical result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>M</strong> (<em>4X4 array</em><em> (</em><em>float</em><em> or </em><em>complex</em><em>)</em>) – Matrix to be inverted</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – Inverse of this matrix or Moore-Penrose approximation if matrix cannot be inverted.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>4X4 array (complex)</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This should give a higher precision and speed at a reduced noise.
+From D.Dietze code <a class="reference external" href="https://github.com/ddietze/FSRStools">https://github.com/ddietze/FSRStools</a></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche23.html">http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche23.html</a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="GTM.GTMcore.vacuum_eps">
+<code class="sig-prename descclassname">GTM.GTMcore.</code><code class="sig-name descname">vacuum_eps</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#GTM.GTMcore.vacuum_eps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vacuum permittivity function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>float</em><em> or </em><em>1D-array</em>) – frequency (in Hz)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>eps</strong> – Complex value of the vacuum permittivity (1.0+1.0j)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>complex or 1D-array of complex</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

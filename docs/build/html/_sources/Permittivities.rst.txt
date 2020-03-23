@@ -2,8 +2,8 @@
 
 .. _Permittivities-label:
 
-Material database module
-------------------------
+Material database
+-----------------
 .. automodule:: GTM.Permittivities
    :members:
    :member-order: bysource

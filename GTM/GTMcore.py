@@ -16,7 +16,7 @@
 # Copyright (C) Mathieu Jeannin 2019 2020 <math.jeannin@free.fr>.
 
 """
-This program implements the generalized 4x4 transfer matrix (GTM) method 
+This module implements the generalized 4x4 transfer matrix (GTM) method 
 poposed in `Passler, N. C. and Paarmann, A., JOSA B 34, 2128 (2017) 
 <http://doi.org/10.1364/JOSAB.34.002128>`_
 and corrected in 
@@ -77,6 +77,19 @@ qsd_thr = 1e-10 ### threshold for wavevector comparison
 
 
 def vacuum_eps(f):
+    """
+    Vacuum permittivity function
+    
+    Parameters
+    ----------
+    f: float or 1D-array
+       frequency (in Hz)
+       
+    Returns
+    -------
+    eps : complex or 1D-array of complex
+        Complex value of the vacuum permittivity (1.0+1.0j)
+    """
     try:
         return np.ones(len(f))
     except:
@@ -86,14 +99,23 @@ def vacuum_eps(f):
 def exact_inv(M):
     """Compute the 'exact' inverse of a 4x4 matrix using the analytical result. 
     
+    Parameters
+    ----------
+    M : 4X4 array (float or complex)
+      Matrix to be inverted
+        
+    Returns
+    -------
+    out : 4X4 array (complex)
+        Inverse of this matrix or Moore-Penrose approximation if matrix cannot be inverted.
+
+    Notes
+    -----
     This should give a higher precision and speed at a reduced noise.
-
-    :param matrix M: 4x4 Matrix.
-    :return: Inverse of this matrix or Moore-Penrose approximation if matrix cannot be inverted.
-
+    From D.Dietze code https://github.com/ddietze/FSRStools
+    
     .. seealso:: http://www.cg.info.hiroshima-cu.ac.jp/~miyazaki/knowledge/teche23.html
     
-    From D.Dietze code https://github.com/ddietze/FSRStools
     """
     assert M.shape == (4, 4)
 
@@ -133,7 +155,8 @@ def exact_inv(M):
     B[3, 2] = A[0, 0] * A[1, 2] * A[3, 1] + A[0, 1] * A[1, 0] * A[3, 2] + A[0, 2] * A[1, 1] * A[3, 0] - A[0, 0] * A[1, 1] * A[3, 2] - A[0, 1] * A[1, 2] * A[3, 0] - A[0, 2] * A[1, 0] * A[3, 1]
     B[3, 3] = A[0, 0] * A[1, 1] * A[2, 2] + A[0, 1] * A[1, 2] * A[2, 0] + A[0, 2] * A[1, 0] * A[2, 1] - A[0, 0] * A[1, 2] * A[2, 1] - A[0, 1] * A[1, 0] * A[2, 2] - A[0, 2] * A[1, 1] * A[2, 0]
 
-    return B.T / detA
+    out = B.T / detA
+    return out
 
 
 #%%
@@ -143,14 +166,28 @@ def exact_inv(M):
 class Layer:
     """
     Layer class. An instance is a single layer:
-        
-    :param float thickness: thickness of the layer in m
-    :param function epsilon1: function epsilon(frequency) for the first axis. If none, defaults to vacuum.
-    :param function epsilon2: function epsilon(frequency) for the second axis. If none, defaults to epsilon1.
-    :param function epsilon3: function epsilon(frequency) for the third axis. If none, defaults to epsilon1.
-    :param float theta: Euler angle theta (colatitude)
-    :param float phi: Euler angle phi
-    :param float psi: Euler angle psi 
+    
+    Attributes
+    -----------
+    thickness : float
+              thickness of the layer in m
+    epsilon1 : complex function
+             function epsilon(frequency) for the first axis. If none, defaults to vacuum.
+    epsilon2 : complex function 
+             function epsilon(frequency) for the second axis. If none, defaults to epsilon1.
+    epsilon3 : complex function
+             function epsilon(frequency) for the third axis. If none, defaults to epsilon1.
+    theta : float 
+          Euler angle theta (colatitude) in rad
+    phi : float 
+        Euler angle phi in rad
+    psi : float 
+        Euler angle psi in rad
+    
+    Notes
+    -----
+    If instanciated with defaults values, it generates a 1um thick layer of air.
+    Properties can be checked/changed dynamically using the corresponding get/set methods.
     """
 
     def __init__(self, thickness=1.0e-6, epsilon1=None, epsilon2=None, epsilon3=None,
@@ -183,24 +220,50 @@ class Layer:
     def set_thickness(self, thickness):
         """
         Sets the layer thickness
+        
+        Parameters
+        ----------
+        thickness : float
+                  the layer thickness (in m)
+        
+        Returns
+        -------
+               None
         """
         self.thick = thickness
         
-    def set_epsilon(self, epsilon1=None, epsilon2=None, epsilon3=None):
+    def set_epsilon(self, epsilon1=vacuum_eps, epsilon2=None, epsilon3=None):
         """
         Sets the dielectric functions for the three main axis.
         
-        Each epsilon_i function returns the dielectric constant along axis i as 
+        Parameters
+        -----------
+        epsilon1 : complex function
+                 function epsilon(frequency) for the first axis. If none, defaults to :py:func:`vacuum_eps`
+        epsilon2 : complex function 
+                 function epsilon(frequency) for the second axis. If none, defaults to epsilon1.
+        epsilon3 : complex function
+                 function epsilon(frequency) for the third axis. If none, defaults to epsilon1.
+        func epsilon1: function returning the first (xx) component of the complex permittivity tensor in the crystal frame. 
+                              
+        Returns
+        -------
+               None
+        
+        Notes
+        ------
+        Each *epsilon_i* function returns the dielectric constant along axis i as 
         a function of the frequency f in Hz.
         
-        epsilon1 defaults to 1.0
+        If no function is given for epsilon1, it defaults to :py:func:`vacuum_eps` (1.0 everywhere).
         epsilon2 and epsilon3 default to epsilon1: if None, a homogeneous material is assumed
         """
+        
         if epsilon1==None:
             self.epsilon1_f = vacuum_eps
         else:
             self.epsilon1_f = epsilon1
-        
+
         if epsilon2 == None:
             self.epsilon2_f = self.epsilon1_f
         else:
@@ -215,11 +278,21 @@ class Layer:
         """ 
         Sets the value of epsilon in the (rotated) lab frame. 
         
-        The values are set according to the epsilon_fi (i=1..3) functions 
-        defined using the 'set_epsilon' method, at the given frequency f. 
-        The rotation w/ respect to the lab frame is computed using the Euler angles.
+        Parameters
+        ----------
+        f : float
+            frequency (in Hz)
+        Returns
+        -------
+            None
         
-        ** Use only explicitely if you don't use the `update` function **
+        Notes
+        ------
+        The values are set according to the epsilon_fi (i=1..3) functions 
+        defined using the :py:func:`set_epsilon` method, at the given frequency f. 
+        The rotation with respect to the lab frame is computed using the Euler angles.
+        
+        Use only explicitely if you *don't* use the :py:func:`Layer.update` function!
         """
         epsilon_xstal = np.zeros((3,3), dtype=np.complex128)
         epsilon_xstal[0,0] = self.epsilon1_f(f)
@@ -232,9 +305,19 @@ class Layer:
     def set_euler(self,theta,phi,psi):
         """
         Sets the values for the Euler rotations angles. 
-        :param float theta: Euler angle theta (colatitude)
-        :param float phi: Euler angle phi
-        :param float psi: Euler angle psi 
+        
+        Parameters
+        ----------
+        theta : float 
+              Euler angle theta (colatitude) in rad
+        phi : float 
+            Euler angle phi in rad
+        psi : float 
+            Euler angle psi in rad
+
+        Returns
+        -------
+            None
         """
         self.theta = theta
         self.phi = phi
@@ -255,12 +338,21 @@ class Layer:
         """
         Calculate the principal matrices necessary for the GTM algorithm.
         
-        :param complex128 zeta: in-place reduced wavevector kx/k0 in the system. 
+        Parameters
+        ----------
+        zeta : complex 
+             In-plane reduced wavevector kx/k0 in the system. 
         
+        Returns
+        -------
+             None
+        
+        Notes
+        -----
         Note that zeta is conserved through the whole system and set externaly
-        using the angle of incidence and System.superstrate.epsilon[0,0] value
+        using the angle of incidence and `System.superstrate.epsilon[0,0]` value
         
-        ** Requires prior execution of `calculate_epsilon` **
+        Requires prior execution of :py:func:`calculate_epsilon`
         
         """
         ## Constitutive matrix (see e.g. eqn (4))
@@ -321,8 +413,15 @@ class Layer:
         
     def calculate_q(self):
         """
-        This function calculates the 4 out-of-plane wavevectors for the current layer. 
+        Calculates the 4 out-of-plane wavevectors for the current layer. 
         
+        Returns
+        -------
+        None
+            
+        
+        Notes
+        -----
         From this we also get the Poynting vectors. 
         Wavevectors are sorted according to (trans-p, trans-s, refl-p, refl-s)
         Birefringence is determined according to a threshold value `qsd_thr` 
@@ -413,7 +512,14 @@ class Layer:
         """
         Calculate the gamma matrix
         
-        :param complex zeta: in-plane reduced wavevector kx/k0
+        Parameters
+        ----------
+        zeta : complex
+             in-plane reduced wavevector kx/k0
+        
+        Returns
+        -------
+        None
         """
         ### this whole function is eqn (20)
         self.gamma[0,0] = 1.0 + 0.0j
@@ -515,10 +621,18 @@ class Layer:
         
     def calculate_transfer_matrix(self, f, zeta):
         """
-        Compute the transfer matrix of the whole layer T=APA^{-1}
+        Compute the transfer matrix of the whole layer :math:`T_i=A_iP_iA_i^{-1}`
         
-        :param float f: frequency 
-        :param complex zeta: reduced in-plane wavevector kx/k0
+        Parameters
+        ----------
+        f : float 
+            frequency (in Hz)
+        zeta : complex
+               reduced in-plane wavevector kx/k0
+        Returns
+        -------
+        None
+        
         """
         ## eqn(22)
         self.Ai[0,:] = self.gamma[:,0].copy()
@@ -539,9 +653,22 @@ class Layer:
     def update(self, f, zeta):
         """Shortcut to recalculate all layer properties.
 
-        :param float zeta: in-plane propagation vector (reduced)
-        :param float f: Frequency value.
-        :return: matrices Ai, Ki, Ai^{-1} and Ti
+        Parameters
+        ----------
+        f : float 
+            frequency (in Hz)
+        zeta : complex
+               reduced in-plane wavevector kx/k0
+        Returns
+        -------
+        Ai : 4x4-array
+             Boundary matrix :math:`A_i` of the layer
+        Ki : 4x4-array
+             Propagation matrix :math:`K_i` of the layer
+        Ai_inv : 4x4-array
+            Inverse of the :math:`A_i` matrix
+        Ti : 4x4-array
+             Transfer matrix of the whole layer
         """
         
         self.calculate_epsilon(f)
@@ -565,19 +692,27 @@ class System:
     """
     System class. An instance is an optical system with substrate, superstrate and layers.
     
-    :param float theta: angle of incidence, in radians
-    :param layer substrate: the substrate layer. defaults to vacuum (empty layer instance)
-    :param layer superstrate: the superstrate layer, defaults to vacuum (empty layer instance)
-    :param list layers: list of the layers
+    Attributes
+    ----------
+    theta : float 
+            Angle of incidence, in radians
+    substrate : Layer 
+            The substrate layer. Defaults to vacuum (empty layer instance)
+    superstrate : Layer 
+            The superstrate layer, defaults to vacuum (empty layer instance)
+    layers : list of layers
+            list of the layers in the system
     
+    Notes
+    -----
     Layers can be added and removed (not inserted). 
     
-    The whole system's transfer matrix is computed using calculate_GammaStar, 
-    which calls layer.update() for each layer.
-    General reflection and transmission coeffs. functions are given, they require prior 
-    execution of calculate_GammaStar.
+    The whole system's transfer matrix is computed using :py:func:`calculate_GammaStar`, 
+    which calls :py:func:`Layer.update` for each layer.
+    General reflection and transmission coefficient functions are given, they require prior 
+    execution of :py:func:`calculate_GammaStar`.
     The electric fields can be visualized in the case of incident plane wave
-    using calculate_Efield
+    using :py:func:`calculate_Efield`
     
     """
     def __init__(self, substrate=None, superstrate=None, layers=[]):#,
@@ -601,51 +736,92 @@ class System:
             self.superstrate=Layer() ## should default to 1µm of vacuum
 
     def set_substrate(self,sub):
-        """Set the substrate
+        """Sets the substrate
         
-        :param layer sub: instance of the layer class, substrate
+        Parameters
+        ----------
+        sub : Layer
+            Instance of the layer class, substrate
+        Returns
+        -------
+        None
         """
         self.substrate=sub
         
     def set_superstrate(self,sup):
         """Set the superstrate
         
-        :param layer sup: instance of the layer class, superstrate
+        Parameters
+        ----------
+        sup : Layer 
+            Instance of the layer class, superstrate
+        Returns
+        -------
+        None
         """
         self.superstrate=sup
     
     def get_all_layers(self):
         """Returns the list of all layers in the system
+        
+        Returns
+        -------
+        l : list 
+            list of all layers
         """
         return self.layers
     
     def get_layer(self,pos):
         """Get the layer at a given position
         
-        :param int pos: position in the stack
-        :return: the layer at the position `pos`
+        Parameters
+        ----------
+        pos : int 
+            position in the stack
+        
+        Returns
+        -------
+        L : Layer
+            The layer at the position `pos`
         """
         return self.layers[pos]
+    
     def get_superstrate(self):
         """Returns the System's superstrate
-        
-        :return: the `System` superstrate
+                
+        Returns
+        -------
+        L : Layer
+            The system superstrate
         """
         return self.superstrate
+
     def get_substrate(self):
         """Returns the System's substrate
         
-        :return: the `System` substrate
+        Returns
+        -------
+        L : Layer
+            The system substrate
         """
         return self.substrate
     
     def add_layer(self,layer):
         """Add a layer instance.
         
-        :param layer layer: the layer to be added on the stack
+        Parameters
+        -----------
+        layer : Layer 
+                The layer to be added on the stack
         
-        Note that the layers are added **from superstrate to substrate** order.
-        Light is incident from the superstrate.
+        Returns
+        -------
+        None
+        
+        Notes
+        -----
+        The layers are added *from superstrate to substrate* order.
+        Light is incident *from the superstrate*.
         
         Note thate this function adds a reference to L to the list. 
         If you are adding the same layer several times, be aware that if you 
@@ -656,16 +832,34 @@ class System:
     def del_layer(self,pos):
         """Remove a layer at given position. Does nothing for invalid position.
         
-        :param integer pos: index of layer to be removed.
+        Parameters
+        ----------
+        pos : int
+            Index of layer to be removed.
+        Returns
+        -------
+        None
         """
         if pos >= 0 and pos < len(self.layers):
             self.layers.pop(pos)
-
+        else:
+            print('Wrong position given. No layer deleted')
 
     def initialize_sys(self, f):
-        """Sets the values of epsilon at given frequency, allowing to define zeta out of the class
+        """Sets the values of epsilon at the given frequency in all the layers.
         
-        :param float f: frequency (Hz)
+        Parameters
+        ----------
+        f : float 
+            Frequency (Hz)
+        Returns
+        -------
+        None
+        
+        Notes
+        -----        
+        This function allows to define the in-plane wavevector (:math:`zeta`) 
+        outside of the class, and thus to explore also guided modes of the system.
         """
         self.superstrate.calculate_epsilon(f)
         self.substrate.calculate_epsilon(f)
@@ -675,11 +869,19 @@ class System:
             
     def calculate_GammaStar(self,f, zeta_sys):
         """
-        Calculate the whole system's transfer matrix GammaStar
+        Calculate the whole system's transfer matrix.
         
-        :param float f: frequency (Hz)
-        :param complex zeta_sys: in-plane wavevector kx/k0
-        :return: System transfer matrix np.array((4,4), dtype=np.complex128)
+        Parameters
+        -----------
+        f : float 
+            Frequency (Hz)
+        zeta_sys : complex 
+            In-plane wavevector kx/k0
+        
+        Returns
+        -------
+        GammaStar: 4x4 complex matrix 
+                   System transfer matrix :math:`\Gamma^{*}`
         """
         Ai_super, Ki_super, Ai_inv_super, T_super = self.superstrate.update(f, zeta_sys)
         Ai_sub, Ki_sub, Ai_inv_sub, T_sub = self.substrate.update(f, zeta_sys)
@@ -709,29 +911,39 @@ class System:
     def calculate_r_t(self, zeta_sys):
         """ Calculate various field and intensity reflection and transmission coefficients, as well as the 4-valued vector of transmitted field.
         
+        Parameters
+        -----------
+        zeta_sys : complex 
+            Incident in-plane wavevector         
+        Returns
+        -------
+        r_out : len(4)-array 
+                Complex *field* reflection coefficients r_out=([rpp,rps,rss,rsp])
+        R_out : len(4)-array
+                Real *intensity* reflection coefficients R_out=([Rpp,Rss,Rsp,Tps])
+        t_out : len(4)-array
+                Complex *field* transmition coefficients t=([tpp, tps, tsp, tss])
+        T_out : len(4)-array
+                Real *intensity* transmition coefficients T_out=([Tp,Ts]) (mode-inselective)
+
+        Notes
+        -----
         **IMPORTANT** 
-        ..version 19-03-2020
+        ..version 19-03-2020:
         All intensity coefficients are now well defined. Transmission is defined 
         mode-independently. It could be defined mode-dependently for non-birefringent 
         substrates in future versions. 
         The new definition of this function **BREAKS compatibility** with the previous 
         one.
         
-        ..version 13-09-2019
+        ..version 13-09-2019:
         Note that the field reflectivity and transmission coefficients 
         r and t are well defined. The intensity reflection coefficient is also correct. 
         However, the intensity transmission coefficients T are ill-defined so far. 
         This will be corrected upon future publication of the correct intensity coefficients.
         
         Note also the different ordering of the coefficients, for consistency w/ Passler's matlab code
-        
-        :param complex zeta_sys: incident in-plane wavevector 
-        
-        :return: Complex *field* reflection coefficients r_out=([rpp,rps,rss,rsp])
-        :return: Real *intensity* reflection coefficients R_out=([Rpp,Rss,Rsp,Tps])
-        :return: Complex *field* transmition coefficients t=([tpp, tps, tsp, tss])
-        :return: Real *intensity* transmition coefficients T_out=([Tp,Ts]) (mode-inselective)
-        
+                
         """
         # common denominator for all coefficients
         Denom = self.GammaStar[0,0]*self.GammaStar[2,2]-self.GammaStar[0,2]*self.GammaStar[2,0]
@@ -810,6 +1022,34 @@ class System:
         """
         Calculate the electric field profiles for both s-pol and p-pol excitation.
         
+        Parameters
+        ----------
+        f : float 
+            frequency (Hz)
+        zeta_sys : complex 
+            in-plane normalized wavevector kx/k0
+        z_vect : 1Darray 
+            Coordinates at which the calculation is done. if None, the layers boundaries are used.
+        x : float or 1D array
+            x-coordinates for (future) 2D plot of the electric field. Not yet implemented
+        magnetic : bool 
+            Boolean to skip or compute the magnetic field vector
+        dz : float (optional)
+            Space resolution along propagation (z) axis. Superseed z_vect
+        
+        Returns
+        --------
+        z : 1Darray
+            1D array of z-coordinates according to dz
+        E_out : (len(z),3)-Array 
+            Total electric field in the structure
+        H_out (opt): (len(z),3)-Array 
+            Total magnetic field in the structure
+        zn : list
+            Positions of the different interfaces
+
+        Notes
+        -----
         ..Version 19-03-2020:
             changed keywords to add z_vect
             z_vect is used for either minimal computation (using get_layers_boundaries)
@@ -825,17 +1065,6 @@ class System:
         ..Version 13-09-2019:
             the 2D field profile is not implemented yet. x should be left to default
         
-        :param float f: frequency (Hz)
-        :param complex zeta_sys: in-plane normalized wavevector kx/k0
-        :param float z_vect: coordinates at which the calculation is done. if None, the layers boundaries are used.
-        :param array x: x-coordinates for (future) 2D plot of the electric field.
-        :param bool magnetic: boolean to skip or compute the magnetic field vector
-        :param float dz: space resolution along propagation (z) axis. Superseed z_vect
-        
-        :return: 1D array of z-coordinates according to dz
-        :return: (len(z),3)-Array E_out of total electric field in the structure
-        :return (opt): (len(z),3)-Array H_out of total magnetic field in the structure
-        :return: list zn of the positions of the different interfaces
         """
 
         self.calculate_GammaStar(f, zeta_sys)
@@ -1037,12 +1266,20 @@ class System:
         """
         Calculate the z-dependent Poynting vector and cumulated absorption.
         
-        :param array z: spatial coordinate for the fields
-        :param array E: 6-components Electric field vector (p- or s- in) along z
-        :param array H: 6-components Magnetic field vector (p- or s- in) along z
-        :param array R: Reflectivity from calculate_r_t()
-        :return array S_out: 6 components (p//s) Poyting vector along z
-        :return array A_out: 2 components (p//s) absorption along z
+        Parameters
+        ----------
+        z : 1Darray
+            Spatial coordinate for the fields
+        E : 1Darray
+            6-components Electric field vector (p- or s- in) along z
+        H : 1Darray
+            6-components Magnetic field vector (p- or s- in) along z
+        R : len(4)-array
+            Reflectivity from :py:func:`calculate_r_t`
+        S_out : 6xlen(z) array
+            6 components (p//s) Poyting vector along z
+        A_out : 2xlen(z) 
+            2 components (p//s) absorption along z
         """
         S_out = np.zeros((6,len(z))) ## Poynting vector
         A_out = np.zeros((2,len(z))) ## z-dependent absorption
@@ -1063,11 +1300,15 @@ class System:
     
     
     def get_layers_boundaries(self):
-        """Return the z-position of all boundaries, including the "top" of the 
+        """
+        Return the z-position of all boundaries, including the "top" of the 
         superstrate and the "bottom" of the substrate. This corresponds to where 
         the fields should be evaluated to get a minimum of information
         
-        "return" : array of layer boundary positions
+        Returns
+        -------
+        zn : 1Darray
+            Array of layer boundary positions
         """
         
         ## Nb of layers
@@ -1085,8 +1326,14 @@ class System:
         """
         Extract the permittivity tensor at given z in the structure
         
-        :param array z: array of points to sample the permittivity
-        :return: array (3x3xlen(z)) of the permittivity tensor
+        Parameters
+        ----------
+        z : 1Darray
+            Array of points to sample the permittivity
+        Returns
+        -------
+        eps : 3x3xlen(z)-array 
+            Complex permittivity tensor as a function of z
         """
         laynum = len(self.layers)
         zn = np.zeros(laynum+2) ## superstrate+layers+substrate
@@ -1123,14 +1370,27 @@ class System:
     
     def calculate_matelem(self, zeta0, f):
         """
+        Calculate the common denominator of all reflexion/transmission coefficients. 
+        
+        Parameters
+        ----------
+        zeta0 : 2-tuple
+            Tuple [zeta_r, zeta_i] of real and imaginary part of the wavevector
+        f : float
+            frequency (in Hz)
+        
+        Returns
+        -------
+        matelem : complex
+            Matrix element to minimize for dispersion relation (absolute value)
+        
+        Notes
+        -----
         Returns the relevant quantity to find waveguide modes according 
         to Davis' paper on multilayers (scalar model 
         http://doi.org/10.1016/j.optcom.2008.09.043)
         and then Yeh (4X4 formalism http://doi.org/10.1016/0039-6028(80)90293-9).
         
-        :param 2-tuple zeta0: Tuple [zeta_r, zeta_i] of real and imaginary part of the wavevector
-        :param float f: frequency
-        :return: matrix element to minimize for dispersion relation (absolute value)
         """
         self.initialize_sys(f)
         zeta_sys = zeta0[0]+1.0j*zeta0[1]
@@ -1140,16 +1400,28 @@ class System:
     
     def calculate_eigen_wv(self, zeta0, f, bounds=None):
         """
-        Get the eigenmode in-plane wavevector that shows guiding along the plane.
+        Calculate the eigenmode in-plane wavevector that shows guiding along the plane.
+        
+        Parameters
+        ----------
+        zeta0 : 2-tuple 
+            Initial guess for the minimization procedure
+        f : float 
+            Frequency (in Hz)
+        bounds : list (optional)
+            list of 2-tuple containing (lower, upper) bound for each parameter
+        
+        Returns
+        -------
+        res : OptimizeResult
+            Result of the minimization procedure. Eigenvalue is the list res.x
+
+        Notes
+        -----
         Based on the idea that guided mode := an output field exists with no input field
         This is **strongly** dependant on the minimization procedure and thus 
         has to be consistently and carefully checked.
-        
-        :param 2-tuple zeta0: initial guess for the minimization procedure
-        :param float f: frequency
-        :param list bounds (optional): list of 2-tuple containing (lower, upper) bound for each parameter
-        
-        :return: result of the minimization procedure. Eigenvalue is the list res.x
+
         """
         res = minimize(self.calculate_matelem, zeta0, args=(f), 
                        method='SLSQP', bounds=bounds)
@@ -1163,13 +1435,22 @@ class System:
         Provided a reasonable initial guess for the first frequency point, we 
         use the eigen_wv from the above method and follow its value as a function 
         of frequency in a stepping manner.
+
+        Parameters
+        -----------        
+        fv : 1Darray
+            Array of frequencies
+        zeta0 : 2-tuple
+            Initial guess for the minimization 
+        bounds : list 
+            list of 2-tuple containing (lower, upper) bound for each parameter
         
-        :param array fv: array of frequencies
-        :param 2-tuple zeta0: initial guess
-        :param list bounds: list of 2-tuple containing (lower, upper) bound for each parameter
-        
-        :return: array of real part of the in-plane wavevector
-        :return: array of imagniary part of the in-plane wavevector
+        Returns
+        -------
+        zeta_disp_r : 1Darray (complex)
+            Array of real part of the in-plane wavevector
+        zeta_disp_i : 1Darray (complex)
+            Array of imaginary part of the in-plane wavevector
         """
         zeta_disp_r = np.zeros(len(fv))
         zeta_disp_i = np.zeros(len(fv))

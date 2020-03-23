@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial &#8212; pyGTM 2.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GTMcore module" href="GTMcore.html" />
+    <link rel="prev" title="Welcome to pyGTM’s documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyGTM</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#first-example-a-single-dielectric-interface">First example: a single dielectric interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#second-example-surface-plasmon-polariton">Second example: surface plasmon polariton</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GTMcore.html">GTMcore module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Permittivities.html">Material database</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to pyGTM’s documentation</a></li>
+      <li>Next: <a href="GTMcore.html" title="next chapter">GTMcore module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial">
+<span id="examples-label"></span><h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="first-example-a-single-dielectric-interface">
+<h3>First example: a single dielectric interface<a class="headerlink" href="#first-example-a-single-dielectric-interface" title="Permalink to this headline">¶</a></h3>
+<p>Once the modules are included in your <cite>pythonpath</cite> you should be able to import them, along with numpy and matplotlib:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">GTM.GTMcore</span> <span class="k">as</span> <span class="nn">GTM</span>
+<span class="kn">import</span> <span class="nn">GTM.Permittivities</span> <span class="k">as</span> <span class="nn">mat</span>
+</pre></div>
+</div>
+<p>We start by creating a new void system (no layers, substrate and superstrate are vacuum):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">### Create an empty system</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">GTM</span><span class="o">.</span><span class="n">System</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We define the substrate (glass) and the superstrate (air), both 1µm thick (by default). We will use a simple lambda function for the permittivity of glass:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">espGlass</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="mf">1.5</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">Glass</span> <span class="o">=</span> <span class="n">GTM</span><span class="o">.</span><span class="n">Layer</span><span class="p">(</span><span class="n">epsilon1</span><span class="o">=</span><span class="n">epsGlass</span><span class="p">)</span>
+<span class="n">Air</span> <span class="o">=</span> <span class="n">GTM</span><span class="o">.</span><span class="n">Layer</span><span class="p">()</span>
+<span class="n">S</span><span class="o">.</span><span class="n">set_superstrate</span><span class="p">(</span><span class="n">Air</span><span class="p">)</span>
+<span class="n">S</span><span class="o">.</span><span class="n">set_substrate</span><span class="p">(</span><span class="n">Glass</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We will probe the system at a single wavelength (600nm) as a function of angle of incidence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lbda</span> <span class="o">=</span> <span class="mf">600e-9</span> <span class="c1">## wavelength</span>
+<span class="n">c_const</span> <span class="o">=</span> <span class="mf">3e8</span> <span class="c1">## speed of light</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">c_const</span><span class="o">/</span><span class="n">lbda</span> <span class="c1">## frequency</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span> <span class="c1">## angle of incidence</span>
+</pre></div>
+</div>
+<p>We will look at the intensity reflection and transmission coefficients, both in p- and s-polarization:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rplot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span> <span class="c1">## intensity reflectivity (p- and s-pol)</span>
+<span class="n">Tplot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span> <span class="c1">## intensity transmission (p- and s-pol)</span>
+<span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">thi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="n">S</span><span class="o">.</span><span class="n">initialize_sys</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="c1"># sets the values of the permittivities in all layers</span>
+    <span class="n">zeta_sys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thi</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">superstrate</span><span class="o">.</span><span class="n">epsilon</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># in-plane wavevector</span>
+    <span class="n">Sys_Gamma</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">calculate_GammaStar</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">zeta_sys</span><span class="p">)</span> <span class="c1"># Tranfer matrix of the system</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">calculate_r_t</span><span class="p">(</span><span class="n">zeta_sys</span><span class="p">)</span> <span class="c1"># all reflection/transmission coefficients</span>
+    <span class="n">Rplot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># p-pol reflectivity</span>
+    <span class="n">Rplot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># s-pol reflectivity</span>
+    <span class="n">Tplot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># p-pol reflectivity</span>
+    <span class="n">Tplot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># s-pol reflectivity</span>
+</pre></div>
+</div>
+<p>And finally we can plot the results:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">Rplot</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$R_p$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">Rplot</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;--b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$R_s$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">Tplot</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$T_p$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">Tplot</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;--r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$T_s$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Angle of incidence (deg)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Reflection/Transmission&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Where we check that p-polarized light experiences total transmission at the <a class="reference external" href="https://en.wikipedia.org/wiki/Brewster%27s_angle">Brewster angle</a>.</p>
+<img alt="_images/Tutorial_RT.png" src="_images/Tutorial_RT.png" />
+</div>
+<div class="section" id="second-example-surface-plasmon-polariton">
+<h3>Second example: surface plasmon polariton<a class="headerlink" href="#second-example-surface-plasmon-polariton" title="Permalink to this headline">¶</a></h3>
+<p>Let us now revert the system and use total internal reflection at the glass-air interface. We will insert a thin, 50nm-thick Au layer in the system and probe the existence of
+a <a class="reference external" href="https://en.wikipedia.org/wiki/Surface_plasmon_polariton">surface plasmon polariton</a> at the Au-air interface.</p>
+<p>We first set up the new system:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Revert the substrate and superstrate</span>
+<span class="n">S</span><span class="o">.</span><span class="n">set_superstrate</span><span class="p">(</span><span class="n">Glass</span><span class="p">)</span>
+<span class="n">S</span><span class="o">.</span><span class="n">set_substrate</span><span class="p">(</span><span class="n">Air</span><span class="p">)</span>
+<span class="c1">## define the Au layer</span>
+<span class="n">Au</span> <span class="o">=</span> <span class="n">GTM</span><span class="o">.</span><span class="n">Layer</span><span class="p">(</span><span class="n">thickness</span><span class="o">=</span><span class="mf">50e-9</span><span class="p">,</span> <span class="n">epsilon1</span><span class="o">=</span><span class="n">mat</span><span class="o">.</span><span class="n">eps_Au</span><span class="p">)</span>
+<span class="c1">## Add the Au layer</span>
+<span class="n">S</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">Au</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and repeat the code above for p-polarization and s-polarization:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rplot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span> <span class="c1">## intensity reflectivity (p- and s-pol)</span>
+<span class="n">Tplot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span> <span class="c1">## intensity transmission (p- and s-pol)</span>
+<span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">thi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="n">S</span><span class="o">.</span><span class="n">initialize_sys</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="c1"># sets the values of the permittivities in all layers</span>
+    <span class="n">zeta_sys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thi</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">superstrate</span><span class="o">.</span><span class="n">epsilon</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># in-plane wavevector</span>
+    <span class="n">Sys_Gamma</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">calculate_GammaStar</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">zeta_sys</span><span class="p">)</span> <span class="c1"># Tranfer matrix of the system</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">calculate_r_t</span><span class="p">(</span><span class="n">zeta_sys</span><span class="p">)</span> <span class="c1"># all reflection/transmission coefficients</span>
+    <span class="n">Rplot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># p-pol reflectivity</span>
+    <span class="n">Rplot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># s-pol reflectivity</span>
+    <span class="n">Tplot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># p-pol reflectivity</span>
+    <span class="n">Tplot</span><span class="p">[</span><span class="n">ii</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># s-pol reflectivity</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">Rplot</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$R_p$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">Rplot</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;--b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$R_s$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">Tplot</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$T_p$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">Tplot</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;--r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$T_s$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Angle of incidence (deg)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Reflection/Transmission&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We then observe that at a very particular angle, only p-polarized light experiences a strong reduction in reflection, while no light is being transmitted. This corresponds to the excitation of a surface plasmon polariton at the Au-Air interface.</p>
+<img alt="_images/Tutorial_SPP.png" src="_images/Tutorial_SPP.png" />
+<p>We can then calculate and plot the electric field at this particular angle:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thetaplot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="c1">## momentum-matching angle</span>
+<span class="n">zeta_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">thetaplot</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">superstrate</span><span class="o">.</span><span class="n">epsilon</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">zplot</span><span class="p">,</span> <span class="n">E_out</span><span class="p">,</span> <span class="n">zn_plot</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">calculate_Efield</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">zeta_plot</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span> <span class="c1"># get the electric field</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="c1">## plot layer boundaries</span>
+<span class="n">yl</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">zi</span> <span class="ow">in</span> <span class="n">zn_plot</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">zi</span><span class="p">,</span> <span class="n">zi</span><span class="p">],</span> <span class="p">[</span><span class="n">yl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yl</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="s1">&#39;:k&#39;</span><span class="p">)</span>
+<span class="c1"># z-component, p-polarized excitation</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zplot</span><span class="p">,</span> <span class="n">E_out</span><span class="p">[</span><span class="mi">2</span><span class="p">,:],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$E_z^p$&#39;</span><span class="p">)</span>
+<span class="c1"># make it lisible</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5e-6</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.5</span><span class="p">,</span> <span class="s1">&#39;Glass&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mf">1e-8</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.5</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5e-6</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.5</span><span class="p">,</span> <span class="s1">&#39;Air&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;propagation axis z (m)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Electric field (A.U.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We observe a strong enhancement of the <cite>z</cite>-component of the electric field for p-polarized excitation, at the Au-air interface, revealing the surface plasmon polariton.</p>
+<img alt="_images/Tutorial_Efield.png" src="_images/Tutorial_Efield.png" />
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>More examples reproducing the results of the two original papers are available in the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> directory.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2020, Mathieu Jeannin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Tutorial.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
