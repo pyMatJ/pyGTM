@@ -9,9 +9,9 @@ A Matlab code can be downloaded on [zenodo](https://doi.org/10.5281/zenodo.60149
 
 As of March 2020, it furthers implements the layer-resolved absorption method proposed in
 [Passler, N. C., Jeannin, M. and Paarmann, A.,](https://arxiv.org/abs/2002.03832)
-A Matlab code is also aailable for this update on [zenodo](https://zenodo.org/record/3648041).
+A Matlab code is also available for this update on [zenodo](https://zenodo.org/record/3648041).
 
-This Python implemetation also relies on inputs from D. Dietze's FSRStools code
+This Python implementation also relies on inputs from D. Dietze's FSRStools code
 https://github.com/ddietze/FSRStools
 
 Please cite the associated publications if you use this code. 
