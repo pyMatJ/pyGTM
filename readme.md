@@ -29,6 +29,11 @@ python will find it or add the path to your PYTHONPATH variable.
 
 Prerequisite: NumPy
 
+Documentation
+==============
+
+See the manual on [Read The Docs](https://pygtm.readthedocs.io/en/latest/index.html) for the documentation. 
+
 License
 =======
 
