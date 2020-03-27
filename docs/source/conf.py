@@ -12,6 +12,7 @@
 #
 import os
 import sys
+import mock
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('./../..'))
 
@@ -47,6 +48,12 @@ exclude_patterns = []
 
 ## RTD expected the master file to be contents.rst
 master_doc = 'index'
+
+#### To mock the modules imported in the main project
+MOCK_MODULES = ['numpy', 'scipy.optimize']
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = mock.Mock()
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
