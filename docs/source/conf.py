@@ -49,7 +49,7 @@ exclude_patterns = []
 master_doc = 'index'
 
 #### To mock the modules imported in the main project
-MOCK_MODULES = ['numpy', 'scipy.optimize']
+MOCK_MODULES = ['numpy', 'numpy.linalg', 'scipy.optimize']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = mock.Mock()
 
