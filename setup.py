@@ -6,10 +6,13 @@ setup(
    description='Generalized Transfer Matrix program',
    author='Mathieu Jeannin',
    author_email='math.jeannin@free.fr',
-   packages=['pyGTM'],  #same as name
-   install_requires=['numpy', 'scipy'], #external packages as dependencies
+   packages=['GTM'],
+   install_requires=['numpy', 'scipy', 'matplotlib'], #external packages as dependencies
+   package_dir={'GTM': 'GTM'},
+   package_data={'GTM': ['GTM/MaterialData/*']},
    scripts=[
-            'GTM/GTMcors',
-            'GTM/Permittivities',
-           ]
+           'GTM/GTMcore.py',
+           'GTM/Permittivities.py',
+            ],
+   include_package_data=True
 )

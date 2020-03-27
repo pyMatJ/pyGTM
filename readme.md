@@ -24,10 +24,10 @@ affiliations:
 Installation
 ============
 
-There is no installation script. Just copy the GTM folder somewhere where
-python will find it or add the path to your PYTHONPATH variable.
+You should be able to install using `pip install .` or running `python setup.py install`, from the project root directory.
+Otherwise just copy the GTM folder somewhere where python will find it or add the path to your PYTHONPATH variable.
 
-Prerequisite: NumPy
+Prerequisite: NumPy, SciPy, Matplotlib
 
 Documentation
 ==============
