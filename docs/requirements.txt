@@ -1,1 +1,2 @@
-pyGTM
+GTM
+sphinx>=2.4.4
