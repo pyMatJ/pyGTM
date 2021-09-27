@@ -208,8 +208,9 @@ class Layer:
         self.Ai = np.zeros((4, 4), dtype=np.complex128) ##
         self.Ki = np.zeros((4, 4), dtype=np.complex128) ##
         self.Ti = np.zeros((4, 4), dtype=np.complex128) ## Layer transfer matrix
-
-      
+        self.Berreman = np.zeros((4,3), dtype=np.complex128) ## Stores the Berreman modes, used for birefringent layers
+        self.useBerreman = False ### Boolean to replace Xu's eigenvectors by Berreman's in case of Birefringence
+        
         self.euler = np.identity(3, dtype=np.complex128) ## rotation matrix
         
         self.set_thickness(thickness) ## set the thickness, 1um by default
@@ -434,6 +435,7 @@ class Layer:
         Delta_loc = self.Delta.copy()
         ## eigenvals // eigenvects as of eqn (11)
         qsunsorted, psiunsorted = lag.eig(Delta_loc)
+        Berreman_unsorted = np.zeros((4,3), dtype=np.complex128)
         
         kt = 0 
         kr = 0;
@@ -468,7 +470,10 @@ class Layer:
             self.Py[0,km] = Ey*Hz-Ez*Hy
             self.Py[1,km] = Ez*Hx-Ex*Hz
             self.Py[2,km] = Ex*Hy-Ey*Hx
-            
+            ### Berreman modes (unsorted) in case they are needed later (birefringence)
+            Berreman_unsorted[km,0] = Ex
+            Berreman_unsorted[km,1] = Ey
+            Berreman_unsorted[km,2] = Ez
         ## check Cp using either the Poynting vector for birefringent
         ## materials or the electric field vector for non-birefringent
         ## media to sort the modes       
@@ -478,6 +483,7 @@ class Layer:
         Cp_t2 = np.abs(self.Py[0,transmode[1]])**2/(np.abs(self.Py[0,transmode[1]])**2+np.abs(self.Py[1,transmode[1]])**2)
         
         if np.abs(Cp_t1-Cp_t2) > qsd_thr: ## birefringence
+            self._useBerreman = True ## sets _useBerreman fo the calculation of gamma matrix below
             if Cp_t2>Cp_t1:
                 transmode = np.flip(transmode,0) ## flip the two values
             ## then calculate for reflected waves if necessary
@@ -507,6 +513,11 @@ class Layer:
         self.Py[:,1] = Py_temp[:,transmode[1]]
         self.Py[:,2] = Py_temp[:,reflmode[0]]
         self.Py[:,3] = Py_temp[:,reflmode[1]]
+        ### Store the (sorted) Berreman modes
+        self.Berreman[0] = Berreman_unsorted[transmode[0],:]
+        self.Berreman[1] = Berreman_unsorted[transmode[1],:]
+        self.Berreman[2] = Berreman_unsorted[reflmode[0],:]
+        self.Berreman[3] = Berreman_unsorted[reflmode[1],:]
         
     def calculate_gamma(self, zeta):
         """
@@ -614,10 +625,19 @@ class Layer:
         gamma3 = gamma3/np.sqrt(np.matmul(gamma3,gamma3.T)) # normalize
         gamma4 = gamma4/np.sqrt(np.matmul(gamma4,gamma4.T)) # normalize
         
+        #### Regular case, no birefringence, we keep the Xu fields
         self.gamma[0,:] = gamma1
         self.gamma[1,:] = gamma2
         self.gamma[2,:] = gamma3
         self.gamma[3,:] = gamma4
+
+        #### In case of birefringence, use Berreman fields
+        if self.useBerreman:
+            for ki in range(4): 
+                ### normalize them first
+                self.Berreman[ki] = self.Berreman[ki]/np.sqrt(np.matmul(self.Berreman[ki], self.Berreman[ki].T))
+            self.gamma = self.Berreman
+        
         
     def calculate_transfer_matrix(self, f, zeta):
         """
