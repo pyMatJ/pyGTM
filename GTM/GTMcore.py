@@ -69,12 +69,13 @@ The optical system is assembled using the :py:class:`System` class.
 
 import numpy as np
 import numpy.linalg as lag
+from scipy.linalg import eig
 from scipy.optimize import minimize
 
 c_const = 299792458 # m/s
 eps0 = 8.854e-12 ## vacuum permittivity
 qsd_thr = 1e-10 ### threshold for wavevector comparison
-
+zero_thr = 1e-10 ### thershold for eigenvalue comparison
 
 def vacuum_eps(f):
     """
@@ -435,6 +436,17 @@ class Layer:
         Delta_loc = self.Delta.copy()
         ## eigenvals // eigenvects as of eqn (11)
         qsunsorted, psiunsorted = lag.eig(Delta_loc)
+        ##### remove extremely small imaginary parts that are due to numerical inaccuracy
+        for km in range(4):
+            if (np.abs(np.imag(qsunsorted[km])) > 0) and (np.abs(np.imag(qsunsorted[km])) < zero_thr):
+                qsunsorted[km] = np.real(qsunsorted[km])+0.0j
+                for comp in range(4):
+                    if (np.abs(np.real(psiunsorted[km][comp]))>0) and (np.abs(np.real(psiunsorted[km][comp])) < zero_thr):
+                        psiunsorted[km][comp] = 0.0 + 1.0j*np.imag(psiunsorted[km][comp])
+                    if (np.abs(np.imag(psiunsorted[km][comp]))>0) and (np.abs(np.imag(psiunsorted[km][comp])) < zero_thr):
+                        psiunsorted[km][comp] = np.real(psiunsorted[km][comp]) + 0.0j
+
+                
         Berreman_unsorted = np.zeros((4,3), dtype=np.complex128)
         
         kt = 0 
