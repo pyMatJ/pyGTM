@@ -69,13 +69,12 @@ The optical system is assembled using the :py:class:`System` class.
 
 import numpy as np
 import numpy.linalg as lag
-from scipy.linalg import eig
 from scipy.optimize import minimize
 
 c_const = 299792458 # m/s
 eps0 = 8.854e-12 ## vacuum permittivity
 qsd_thr = 1e-10 ### threshold for wavevector comparison
-zero_thr = 1e-10 ### thershold for eigenvalue comparison
+zero_thr = 1e-10 ### threshold for eigenvalue comparison to zero
 
 def vacuum_eps(f):
     """
@@ -89,12 +88,12 @@ def vacuum_eps(f):
     Returns
     -------
     eps : complex or 1D-array of complex
-        Complex value of the vacuum permittivity (1.0+1.0j)
+        Complex value of the vacuum permittivity (1.0 + 0.0j)
     """
     try:
         return np.ones(len(f))
     except:
-        return 1.0+1.0j*0
+        return 1.0 + 0.0j
     
     
 def exact_inv(M):
@@ -300,7 +299,7 @@ class Layer:
         epsilon_xstal[0,0] = self.epsilon1_f(f)
         epsilon_xstal[1,1] = self.epsilon2_f(f)
         epsilon_xstal[2,2] = self.epsilon3_f(f)
-        self.epsilon = np.matmul(lag.pinv(self.euler), np.matmul(epsilon_xstal,self.euler))
+        self.epsilon = np.matmul(lag.inv(self.euler), np.matmul(epsilon_xstal,self.euler))
         return self.epsilon.copy()
     
     
@@ -376,7 +375,6 @@ class Layer:
         
         ## S Matrix (Don't know where it comes from since Delta is just S re-ordered)
         ## Note that after this only Delta is used
-        ### S[3,ii] was wrong in matlab code (M{kl}(4,6,:) should be M{kl}(5,6,:))
         self.S[0,0] = self.M[0,0] + self.M[0,2]*self.a[2,0] + self.M[0,5]*self.a[5,0];
         self.S[0,1] = self.M[0,1] + self.M[0,2]*self.a[2,1] + self.M[0,5]*self.a[5,1];
         self.S[0,2] = self.M[0,3] + self.M[0,2]*self.a[2,3] + self.M[0,5]*self.a[5,3];
@@ -436,15 +434,17 @@ class Layer:
         Delta_loc = self.Delta.copy()
         ## eigenvals // eigenvects as of eqn (11)
         qsunsorted, psiunsorted = lag.eig(Delta_loc)
-        ##### remove extremely small imaginary parts that are due to numerical inaccuracy
+        ##### remove extremely small real/imaginary parts that are due to numerical inaccuracy
         for km in range(4):
             if (np.abs(np.imag(qsunsorted[km])) > 0) and (np.abs(np.imag(qsunsorted[km])) < zero_thr):
-                qsunsorted[km] = np.real(qsunsorted[km])+0.0j
-                for comp in range(4):
-                    if (np.abs(np.real(psiunsorted[km][comp]))>0) and (np.abs(np.real(psiunsorted[km][comp])) < zero_thr):
-                        psiunsorted[km][comp] = 0.0 + 1.0j*np.imag(psiunsorted[km][comp])
-                    if (np.abs(np.imag(psiunsorted[km][comp]))>0) and (np.abs(np.imag(psiunsorted[km][comp])) < zero_thr):
-                        psiunsorted[km][comp] = np.real(psiunsorted[km][comp]) + 0.0j
+                qsunsorted[km] = np.real(qsunsorted[km]) + 0.0j
+            if (np.abs(np.real(qsunsorted[km])) > 0) and (np.abs(np.real(qsunsorted[km])) < zero_thr):
+                qsunsorted[km] = 0.0 + 1.0j*np.imag(qsunsorted[km])
+        for comp in range(4):
+            if (np.abs(np.real(psiunsorted[km][comp]))>0) and (np.abs(np.real(psiunsorted[km][comp])) < zero_thr):
+                psiunsorted[km][comp] = 0.0 + 1.0j*np.imag(psiunsorted[km][comp])
+            if (np.abs(np.imag(psiunsorted[km][comp]))>0) and (np.abs(np.imag(psiunsorted[km][comp])) < zero_thr):
+                psiunsorted[km][comp] = np.real(psiunsorted[km][comp]) + 0.0j
 
                 
         Berreman_unsorted = np.zeros((4,3), dtype=np.complex128)
@@ -571,7 +571,7 @@ class Layer:
                 gamma12 = 0.0 + 0.0j
             
             gamma13 = -(self.mu*self.epsilon[2,0]+zeta*self.qs[0])
-            gamma13 = gamma13-self.mu*self.epsilon[2,1]*gamma12 #### gamma12 factor missing in (20) but present in ref [13]
+            gamma13 = gamma13-self.mu*self.epsilon[2,1]*gamma12 
             gamma13 = gamma13/(self.mu*self.epsilon[2,2]-zeta**2)
             
             if np.isnan(gamma13):
@@ -607,11 +607,11 @@ class Layer:
                 gamma32 = 0.0 + 0.0j
             
             gamma33 = self.mu*self.epsilon[2,0] + zeta*self.qs[2]
-            gamma33 = gamma33 + self.mu*self.epsilon[2,1]*gamma32 #### gamma32 factor missing in (20) but present in ref [13]
+            gamma33 = gamma33 + self.mu*self.epsilon[2,1]*gamma32 
             gamma33 = gamma33/(self.mu*self.epsilon[2,2]-zeta**2)
             if np.isnan(gamma33):
                 gamma33 = (self.mu*self.epsilon[2,0] + zeta*self.qs[2])/(self.mu*self.epsilon[2,2]-zeta**2)
-            
+
             gamma41_num = self.mu*self.epsilon[2,1]*(self.mu*self.epsilon[0,2]+zeta*self.qs[3])
             gamma41_num = gamma41_num - self.mu*self.epsilon[0,1]*(self.mu*self.epsilon[2,2]-zeta**2)
             gamma41_denom = (self.mu*self.epsilon[2,2]-zeta**2)*(self.mu*self.epsilon[0,0]-self.qs[3]**2)
@@ -931,7 +931,7 @@ class System:
         for ii in range(len(self.layers))[::-1]:
             Ai, Ki, Ai_inv, T_ii = self.layers[ii].update(f, zeta_sys)
             Tloc = np.matmul(T_ii,Tloc)
-        
+    
         Gamma = np.matmul(Ai_inv_super,np.matmul(Tloc,Ai_sub))
         GammaStar = np.matmul(exact_inv(Delta1234),np.matmul(Gamma,Delta1234))
         
@@ -979,7 +979,6 @@ class System:
         """
         # common denominator for all coefficients
         Denom = self.GammaStar[0,0]*self.GammaStar[2,2]-self.GammaStar[0,2]*self.GammaStar[2,0]
-        
         # field reflection coefficients
         rpp = self.GammaStar[1,0]*self.GammaStar[2,2]-self.GammaStar[1,2]*self.GammaStar[2,0]
         rpp = np.nan_to_num(rpp/Denom)
