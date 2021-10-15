@@ -550,21 +550,22 @@ class Layer:
         self.gamma[3,1] = 1.0 + 0.0j
         self.gamma[2,0] = -1.0 + 0.0j
         
+        ### convenience definition of the repetitive factor
+        mu_eps33_zeta2 = (self.mu*self.epsilon[2,2]-zeta**2)
+        
         if np.abs(self.qs[0]-self.qs[1])<qsd_thr:
             gamma12 = 0.0 + 0.0j
             
-            gamma13 = -(self.mu*self.epsilon[2,0]+zeta*self.qs[0])
-            gamma13 = gamma13/(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma13 = -(self.mu*self.epsilon[2,0]+zeta*self.qs[0])/mu_eps33_zeta2
             
             gamma21 = 0.0 + 0.0j
             
-            gamma23 = -self.mu*self.epsilon[2,1]
-            gamma23 = gamma23/(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma23 = -self.mu*self.epsilon[2,1]/mu_eps33_zeta2
         
         else:
             gamma12_num = self.mu*self.epsilon[1,2]*(self.mu*self.epsilon[2,0]+zeta*self.qs[0])
-            gamma12_num = gamma12_num - self.mu*self.epsilon[1,0]*(self.mu*self.epsilon[2,2]-zeta**2)
-            gamma12_denom = (self.mu*self.epsilon[2,2]-zeta**2)*(self.mu*self.epsilon[1,1]-zeta**2-self.qs[0]**2)
+            gamma12_num = gamma12_num - self.mu*self.epsilon[1,0]*mu_eps33_zeta2
+            gamma12_denom = mu_eps33_zeta2*(self.mu*self.epsilon[1,1]-zeta**2-self.qs[0]**2)
             gamma12_denom = gamma12_denom - self.mu**2*self.epsilon[1,2]*self.epsilon[2,1]
             gamma12 = gamma12_num/gamma12_denom
             if np.isnan(gamma12):
@@ -572,35 +573,35 @@ class Layer:
             
             gamma13 = -(self.mu*self.epsilon[2,0]+zeta*self.qs[0])
             gamma13 = gamma13-self.mu*self.epsilon[2,1]*gamma12 
-            gamma13 = gamma13/(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma13 = gamma13/mu_eps33_zeta2
             
             if np.isnan(gamma13):
                 gamma13 = -(self.mu*self.epsilon[2,0]+zeta*self.qs[0])
-                gamma13 = gamma13/(self.mu*self.epsilon[2,2]-zeta**2)
+                gamma13 = gamma13/mu_eps33_zeta2
 
             gamma21_num = self.mu*self.epsilon[2,1]*(self.mu*self.epsilon[0,2]+zeta*self.qs[1])
-            gamma21_num = gamma21_num-self.mu*self.epsilon[0,1]*(self.mu*self.epsilon[2,2]-zeta**2)
-            gamma21_denom = (self.mu*self.epsilon[2,2]-zeta**2)*(self.mu*self.epsilon[0,0]-self.qs[1]**2)
+            gamma21_num = gamma21_num-self.mu*self.epsilon[0,1]*mu_eps33_zeta2
+            gamma21_denom = mu_eps33_zeta2*(self.mu*self.epsilon[0,0]-self.qs[1]**2)
             gamma21_denom = gamma21_denom-(self.mu*self.epsilon[0,2]+zeta*self.qs[1])*(self.mu*self.epsilon[2,0]+zeta*self.qs[1])
             gamma21 = gamma21_num/gamma21_denom
             if np.isnan(gamma21):
                 gamma21 = 0.0+0.0j
                 
             gamma23 = -(self.mu*self.epsilon[2,0] +zeta*self.qs[1])*gamma21-self.mu*self.epsilon[2,1]
-            gamma23 = gamma23/(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma23 = gamma23/mu_eps33_zeta2
             if np.isnan(gamma23):
-                gamma23 = -self.mu*self.epsilon[2,1]/(self.mu*self.epsilon[2,2]-zeta**2)
+                gamma23 = -self.mu*self.epsilon[2,1]/mu_eps33_zeta2
 
         if np.abs(self.qs[2]-self.qs[3])<qsd_thr:
             gamma32 = 0.0 + 0.0j
-            gamma33 = (self.mu*self.epsilon[2,0]+zeta*self.qs[2])/(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma33 = (self.mu*self.epsilon[2,0]+zeta*self.qs[2])/mu_eps33_zeta2
             gamma41 = 0.0 + 0.0j
-            gamma43 = -self.mu*self.epsilon[2,1]/(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma43 = -self.mu*self.epsilon[2,1]/mu_eps33_zeta2
         
         else:
-            gamma32_num = self.mu*self.epsilon[1,0]*(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma32_num = self.mu*self.epsilon[1,0]*mu_eps33_zeta2
             gamma32_num = gamma32_num-self.mu*self.epsilon[1,2]*(self.mu*self.epsilon[2,0]+zeta*self.qs[2])
-            gamma32_denom = (self.mu*self.epsilon[2,2]-zeta**2)*(self.mu*self.epsilon[1,1]-zeta**2-self.qs[2]**2)
+            gamma32_denom = mu_eps33_zeta2*(self.mu*self.epsilon[1,1]-zeta**2-self.qs[2]**2)
             gamma32_denom = gamma32_denom-self.mu**2*self.epsilon[1,2]*self.epsilon[2,1]
             gamma32 = gamma32_num/gamma32_denom
             if np.isnan(gamma32):
@@ -608,13 +609,13 @@ class Layer:
             
             gamma33 = self.mu*self.epsilon[2,0] + zeta*self.qs[2]
             gamma33 = gamma33 + self.mu*self.epsilon[2,1]*gamma32 
-            gamma33 = gamma33/(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma33 = gamma33/mu_eps33_zeta2
             if np.isnan(gamma33):
-                gamma33 = (self.mu*self.epsilon[2,0] + zeta*self.qs[2])/(self.mu*self.epsilon[2,2]-zeta**2)
+                gamma33 = (self.mu*self.epsilon[2,0] + zeta*self.qs[2])/mu_eps33_zeta2
 
             gamma41_num = self.mu*self.epsilon[2,1]*(self.mu*self.epsilon[0,2]+zeta*self.qs[3])
-            gamma41_num = gamma41_num - self.mu*self.epsilon[0,1]*(self.mu*self.epsilon[2,2]-zeta**2)
-            gamma41_denom = (self.mu*self.epsilon[2,2]-zeta**2)*(self.mu*self.epsilon[0,0]-self.qs[3]**2)
+            gamma41_num = gamma41_num - self.mu*self.epsilon[0,1]*mu_eps33_zeta2
+            gamma41_denom = mu_eps33_zeta2*(self.mu*self.epsilon[0,0]-self.qs[3]**2)
             gamma41_denom = gamma41_denom - (self.mu*self.epsilon[0,2]+zeta*self.qs[3])*(self.mu*self.epsilon[2,0]+zeta*self.qs[3])
             gamma41 = gamma41_num/gamma41_denom
             if np.isnan(gamma41):
@@ -622,9 +623,9 @@ class Layer:
                 
             gamma43 = -(self.mu*self.epsilon[2,0]+zeta*self.qs[3])*gamma41
             gamma43 = gamma43-self.mu*self.epsilon[2,1]
-            gamma43 = gamma43/(self.mu*self.epsilon[2,2]-zeta**2)
+            gamma43 = gamma43/mu_eps33_zeta2
             if np.isnan(gamma43):
-                gamma43 = -self.mu*self.epsilon[2,1]/(self.mu*self.epsilon[2,2]-zeta**2)
+                gamma43 = -self.mu*self.epsilon[2,1]/mu_eps33_zeta2
         
         ### gamma field vectors should be normalized to avoid any birefringence problems
         # use double square bracket notation to ensure correct array shape
@@ -632,21 +633,17 @@ class Layer:
         gamma2 = np.array([[gamma21, self.gamma[1,1], gamma23]],dtype=np.complex128)
         gamma3 = np.array([[self.gamma[2,0], gamma32, gamma33]],dtype=np.complex128)
         gamma4 = np.array([[gamma41, self.gamma[3,1], gamma43]],dtype=np.complex128)
-        gamma1 = gamma1/np.sqrt(np.matmul(gamma1,np.conj(gamma1.T))) # normalize
-        gamma2 = gamma2/np.sqrt(np.matmul(gamma2,np.conj(gamma2.T))) # normalize
-        gamma3 = gamma3/np.sqrt(np.matmul(gamma3,np.conj(gamma3.T))) # normalize
-        gamma4 = gamma4/np.sqrt(np.matmul(gamma4,np.conj(gamma4.T))) # normalize
         
         #### Regular case, no birefringence, we keep the Xu fields
-        self.gamma[0,:] = gamma1
-        self.gamma[1,:] = gamma2
-        self.gamma[2,:] = gamma3
-        self.gamma[3,:] = gamma4
+        self.gamma[0,:] = gamma1/lag.norm(gamma1)
+        self.gamma[1,:] = gamma2/lag.norm(gamma2)
+        self.gamma[2,:] = gamma3/lag.norm(gamma3)
+        self.gamma[3,:] = gamma4/lag.norm(gamma4)
 
         #### In case of birefringence, use Berreman fields
         for ki in range(4): 
             ### normalize them first
-            self.Berreman[ki] = self.Berreman[ki]/np.sqrt(np.matmul(self.Berreman[ki], self.Berreman[ki].T))
+            self.Berreman[ki] = self.Berreman[ki]/lag.norm(self.Berreman[ki])
         if self.useBerreman:
             print('replaced gamma by Berreman')
             self.gamma = self.Berreman
