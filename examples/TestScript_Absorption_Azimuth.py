@@ -36,13 +36,15 @@ c_const = 3e8
 #%% setup Simulation
 
 ## Parameters
-f_sp = c_const*np.linspace(500.0e2, 1100.0e2, 100) ## frequency range (cm-1->Hz)
+fstart, fstop, fstep = 500e2, 1050e2, 2e2
+f_sp = c_const*np.arange(fstart, fstop+fstep, fstep) ## frequency range (cm-1->Hz)
 ## **careful** angle of incidence is theta_in, 
 ## it is **not** the euler anle theta for the layers
 theta_in = np.deg2rad(28)
 
 ## Note that Phi in the text is actually Euler angle psi
-psi_v = np.deg2rad(np.arange(0,181,5)) # to get the last value
+psi_start, psi_stop, psi_step = 0, 180, 2
+psi_v = np.deg2rad(np.arange(psi_start, psi_stop+psi_step, psi_step)) # to get the last value
 phi = 0.0
 # the principal vertical axis of the layer is still z so theta=0
 theta = 0.0
