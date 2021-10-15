@@ -428,8 +428,8 @@ class Layer:
         set at the beginning of the script. 
         """
         Delta_loc = np.zeros((4,4), dtype=np.complex128)
-        transmode = np.zeros((2), dtype=np.int)
-        reflmode = np.zeros((2), dtype=np.int)
+        transmode = np.zeros((2), dtype=np.int64)
+        reflmode = np.zeros((2), dtype=np.int64)
         
         Delta_loc = self.Delta.copy()
         ## eigenvals // eigenvects as of eqn (11)
@@ -598,7 +598,7 @@ class Layer:
             gamma43 = -self.mu*self.epsilon[2,1]/(self.mu*self.epsilon[2,2]-zeta**2)
         
         else:
-            gamma32_num = self.mu*self.epsilon[1,0]*(self.mu*self.epsilon[2,2]+zeta**2)
+            gamma32_num = self.mu*self.epsilon[1,0]*(self.mu*self.epsilon[2,2]-zeta**2)
             gamma32_num = gamma32_num-self.mu*self.epsilon[1,2]*(self.mu*self.epsilon[2,0]+zeta*self.qs[2])
             gamma32_denom = (self.mu*self.epsilon[2,2]-zeta**2)*(self.mu*self.epsilon[1,1]-zeta**2-self.qs[2]**2)
             gamma32_denom = gamma32_denom-self.mu**2*self.epsilon[1,2]*self.epsilon[2,1]
@@ -632,10 +632,10 @@ class Layer:
         gamma2 = np.array([[gamma21, self.gamma[1,1], gamma23]],dtype=np.complex128)
         gamma3 = np.array([[self.gamma[2,0], gamma32, gamma33]],dtype=np.complex128)
         gamma4 = np.array([[gamma41, self.gamma[3,1], gamma43]],dtype=np.complex128)
-        gamma1 = gamma1/np.sqrt(np.matmul(gamma1,gamma1.T)) # normalize
-        gamma2 = gamma2/np.sqrt(np.matmul(gamma2,gamma2.T)) # normalize
-        gamma3 = gamma3/np.sqrt(np.matmul(gamma3,gamma3.T)) # normalize
-        gamma4 = gamma4/np.sqrt(np.matmul(gamma4,gamma4.T)) # normalize
+        gamma1 = gamma1/np.sqrt(np.matmul(gamma1,np.conj(gamma1.T))) # normalize
+        gamma2 = gamma2/np.sqrt(np.matmul(gamma2,np.conj(gamma2.T))) # normalize
+        gamma3 = gamma3/np.sqrt(np.matmul(gamma3,np.conj(gamma3.T))) # normalize
+        gamma4 = gamma4/np.sqrt(np.matmul(gamma4,np.conj(gamma4.T))) # normalize
         
         #### Regular case, no birefringence, we keep the Xu fields
         self.gamma[0,:] = gamma1
@@ -644,10 +644,11 @@ class Layer:
         self.gamma[3,:] = gamma4
 
         #### In case of birefringence, use Berreman fields
+        for ki in range(4): 
+            ### normalize them first
+            self.Berreman[ki] = self.Berreman[ki]/np.sqrt(np.matmul(self.Berreman[ki], self.Berreman[ki].T))
         if self.useBerreman:
-            for ki in range(4): 
-                ### normalize them first
-                self.Berreman[ki] = self.Berreman[ki]/np.sqrt(np.matmul(self.Berreman[ki], self.Berreman[ki].T))
+            print('replaced gamma by Berreman')
             self.gamma = self.Berreman
         
         
