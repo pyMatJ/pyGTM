@@ -16,10 +16,12 @@ https://github.com/ddietze/FSRStools
 
 Please cite the associated publications if you use this code. 
 
-author: Mathieu Jeannin <math.jeannin@free.fr> (permanent)  
+author: Mathieu Jeannin\
+email: <mathieu.jeannin@c2n.upsaclay.fr> (institutional)\
+<math.jeannin@free.fr> (permanent)  
 affiliations: 
-    Laboratoire de Physique de l'Ecole Normale Superieure (2019)
-    Centre de Nanosciences et de Nanotechnologies (2020)
+    Laboratoire de Physique de l'Ecole Normale Superieure (2019)\
+    Centre de Nanosciences et de Nanotechnologies (2020-2021)
 
 Installation
 ============
@@ -49,5 +51,5 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-Copyright (C) Mathieu Jeannin 2019, 2020 <math.jeannin@free.fr>.
+Copyright (C) Mathieu Jeannin 2019-2021 <mathieu.jeannin@c2n.upsaclay.fr>.
     

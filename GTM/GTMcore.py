@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #     
-# Copyright (C) Mathieu Jeannin 2019 2020 <math.jeannin@free.fr>.
+# Copyright (C) Mathieu Jeannin 2019-2021 <mathieu.jeannin@c2n.upsaclay.fr> <math.jeannin@free.fr>.
 
 """
 This module implements the generalized 4x4 transfer matrix (GTM) method 
@@ -29,11 +29,11 @@ https://github.com/ddietze/FSRStools
 Please cite the relevant associated publications if you use this code. 
 
 Author: 
-    - Mathieu Jeannin math.jeannin@free.fr (permanent)
+    - Mathieu Jeannin mathieu.jeannin@c2n.upsaclay.fr  math.jeannin@free.fr (permanent)
 
 Affiliations: 
     - Laboratoire de Physique de l'Ecole Normale Superieure (2019)
-    - Centre de Nanosciences et Nanotechnologies (2020)
+    - Centre de Nanosciences et Nanotechnologies (2020-2021)
 
 Layers are represented by the :py:class:`Layer` class that holds all parameters 
 describing the optical properties of a single layer. 
@@ -41,7 +41,14 @@ The optical system is assembled using the :py:class:`System` class.
   
            
 **Change log:**
-
+    
+    *15-10-2021*:
+        
+        - Fixed rounding error bug in lag.eig() causing the program to crash randomly
+        for negligibly small imaginary parts of the wavevectors
+        
+        - Corrected a sign error in gamma32 that lead to field discontinuities
+    
     *19-03-2020*:
 
         - Adapted the code to compute the layer-resolved absorption as proposed 

@@ -13,7 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #     
-# Copyright (C) Mathieu Jeannin 2019 2020 <math.jeannin@free.fr>.
+# Copyright (C) Mathieu Jeannin 2019-2021 <mathieu.jeannin@c2n.upsaclay.fr> <math.jeannin@free.fr>.
+
 """
 Define permittivity functions to be used in the GTM method.
 
@@ -25,13 +26,19 @@ expectations !
 All permittivities are expected to be calculated at frequency f in Hz.
 
 **Change log:**
-  *19-03-2020*:
-   - Fixed various bugs in the definition of single resonance materials 
-     (GaN, AlN, MoO3, InN, hBN) and added SiC without weak phonon modes
-  *20-09-2019*:
-   - Fixed database problems for some materials and some mistakes in the 
-     permittivity functions. Commented out helper `print` functions. 
-    
+
+    *15-10-2021*:
+        
+        - Fixed ordering of KRS5 tabulated permittivity data
+        
+    *19-03-2020*:
+   
+        - Fixed various bugs in the definition of single resonance materials 
+        (GaN, AlN, MoO3, InN, hBN) and added SiC without weak phonon modes
+  
+    *20-09-2019*:
+        - Fixed database problems for some materials and some mistakes in the 
+        permittivity functions. Commented out helper `print` functions. 
 """
 import numpy as np
 import os
