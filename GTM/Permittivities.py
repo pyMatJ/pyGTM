@@ -50,6 +50,26 @@ localpath = os.path.dirname(__file__)
 
 c_const = 299792458 # m/s
 
+
+def vacuum_eps(f):
+    """
+    Vacuum permittivity function
+
+    Parameters
+    ----------
+    f: float or 1D-array
+       frequency (in Hz)
+
+    Returns
+    -------
+    eps : complex or 1D-array of complex
+        Complex value of the vacuum permittivity (1.0 + 0.0j)
+    """
+    try:
+        return np.ones(len(f))
+    except:
+        return 1.0 + 0.0j
+
 def eps_KRS5(f):
     """
     Tabulated values for KRS5 material
