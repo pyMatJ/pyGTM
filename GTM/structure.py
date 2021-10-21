@@ -17,7 +17,7 @@
 # <mathieu.jeannin@c2n.upsaclay.fr>
 # <math.jeannin@free.fr>.
 
-
+import numpy as np
 from .layer import Layer
 
 
@@ -167,24 +167,67 @@ class Structure:
         else:
             print('Wrong position given. No layer deleted')
 
-    def initialize_sys(self, f):
-        """Sets the values of epsilon at the given frequency in all the layers.
+    def get_layers_boundaries(self):
+        """
+        Return the z-position of all boundaries, including the "top" of the
+        superstrate and the "bottom" of the substrate. This corresponds to where
+        the fields should be evaluated to get a minimum of information
+
+        Returns
+        -------
+        zn : 1Darray
+            Array of layer boundary positions
+        """
+
+        # Nb of layers
+        laynum = len(self.layers)
+        zn = np.zeros(laynum+3)  # superstrate+layers+substrate
+        zn[0] = -self.superstrate.thick
+        zn[1] = 0
+        for ii, li in enumerate(self.layers):
+            zn[ii+2] = zn[ii+1]+li.thick
+        zn[-1] = zn[-2]+self.substrate.thick
+        return np.array(zn)
+
+    def get_spatial_permittivity(self, z):
+        """
+        Extract the permittivity tensor at given z in the structure
 
         Parameters
         ----------
-        f : float
-            Frequency (Hz)
+        z : 1Darray
+            Array of points to sample the permittivity
         Returns
         -------
-        None
-
-        Notes
-        -----
-        This function allows to define the in-plane wavevector (:math:`zeta`)
-        outside of the class, and thus to explore also guided modes of the
-        system.
+        eps : 3x3xlen(z)-array
+            Complex permittivity tensor as a function of z
         """
-        self.superstrate.calculate_epsilon(f)
-        self.substrate.calculate_epsilon(f)
-        for li in self.layers:
-            li.calculate_epsilon(f)
+        laynum = len(self.layers)
+        zn = np.zeros(laynum+2)  # superstrate+layers+substrate
+        zn[-1] = 0.0  # initially with the substrate
+        if laynum > 0:
+            zn[-2] = zn[-1]-self.substrate.thick
+            for kl in range(1, laynum)[::-1]:
+                # subtract the thickness (building thickness array backwards)
+                zn[kl] = zn[kl+1]-self.layers[kl].thick
+            zn[0] = zn[1]-self.layers[0].thick
+        else:
+            zn[0] = -self.substrate.thick
+        zn = zn-zn[0]
+        # starting from the superstrate:
+        current_layer = 0
+        L = self.superstrate
+        eps = np.ones((3, 3, len(z)), dtype=np.complex128)
+        for ii, zc in enumerate(z):  # enumerates returns a tuple (index, value)
+            if zc > zn[current_layer]:
+                # change the layer
+                # important to count here until laynum+1 to get the correct zn
+                # in the substrate for dKiz
+
+                current_layer += 1
+                if current_layer == laynum+1:  # reached substrate
+                    L = self.substrate
+                else:
+                    L = self.layers[current_layer-1]
+            eps[:, :, ii] = L.epsilon
+        return eps
