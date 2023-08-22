@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #     
-# Copyright (C) Mathieu Jeannin 2019-2021 <mathieu.jeannin@c2n.upsaclay.fr> <math.jeannin@free.fr>.
+# Copyright (C) Mathieu Jeannin 2019-2023 <mathieu.jeannin@c2n.upsaclay.fr> 
 
 """
 This program implements the generalized 4x4 transfer matrix (GTM) method 
@@ -29,11 +29,11 @@ https://github.com/ddietze/FSRStools
 Please cite the relevant associated publications if you use this code. 
 
 Author: 
-    - Mathieu Jeannin mathieu.jeannin@c2n.upsaclay.fr  math.jeannin@free.fr (permanent)
+    - Mathieu Jeannin mathieu.jeannin@c2n.upsaclay.fr 
 
 Affiliations: 
     - Laboratoire de Physique de l'Ecole Normale Superieure (2019)
-    - Centre de Nanosciences et Nanotechnologies (2020-2021)
+    - Centre de Nanosciences et Nanotechnologies (from 2020)
 ..
 This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,6 +48,6 @@ This program is free software: you can redistribute it and/or modify
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
-    Copyright (C) Mathieu Jeannin 2019-2021 <math.jeannin@free.fr>.
+    Copyright (C) Mathieu Jeannin 2019-2023 <mathieu.jeannin@c2n.upsaclay.fr>
     
 """
