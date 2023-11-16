@@ -216,7 +216,7 @@ class Layer:
         self.Ki = np.zeros((4, 4), dtype=np.complex128) ##
         self.Ti = np.zeros((4, 4), dtype=np.complex128) ## Layer transfer matrix
         self.Berreman = np.zeros((4,3), dtype=np.complex128) ## Stores the Berreman modes, used for birefringent layers
-        self.useBerreman = False ### Boolean to replace Xu's eigenvectors by Berreman's in case of Birefringence
+        self._useBerreman = False ### Boolean to replace Xu's eigenvectors by Berreman's in case of Birefringence
         
         self.euler = np.identity(3, dtype=np.complex128) ## rotation matrix
         
@@ -651,7 +651,7 @@ class Layer:
         for ki in range(4): 
             ### normalize them first
             self.Berreman[ki] = self.Berreman[ki]/lag.norm(self.Berreman[ki])
-        if self.useBerreman:
+        if self._useBerreman:
             print('replaced gamma by Berreman')
             self.gamma = self.Berreman
         
